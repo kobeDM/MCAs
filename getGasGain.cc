@@ -107,7 +107,7 @@ CalParams getGasGain( const String& inputDir, const String& outputDir, const dou
     func.SetParameter(0,funcPrim.GetParameter( 0 ) );
     func.SetParameter(1,funcPrim.GetParameter( 1 ) );
     func.SetParameter(2,funcPrim.GetParameter( 2 ) );
-    hist.Fit( &func, "L", "", funcPrim.GetParameter(1) - funcPrim.GetParameter(2)*0.4, funcPrim.GetParameter(1) + funcPrim.GetParameter(2)*1.2 );
+    hist.Fit( &func, "L", "", funcPrim.GetParameter(1) - funcPrim.GetParameter(2)*0.7, funcPrim.GetParameter(1) + funcPrim.GetParameter(2)*1.2 );
 
     double mean     = func.GetParameter( 1 );
     double meanErr  = func.GetParError( 1 );

@@ -3,8 +3,6 @@
 
 void drawGainCurve( const String& inputFileList, const String& outputDir, const double& gainFactor, const String& calSource )
 {
-    // SetShStyle( );
-
     ShUtil::ExistCreateDir( outputDir );
     
     std::ifstream ifs( inputFileList );
