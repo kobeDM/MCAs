@@ -1,30 +1,4 @@
-#include "inc/shinclude.h"
-
-
-class CalParams {
-public:
-    CalParams  ( );
-    ~CalParams ( );
-    
-    double m_gasGain;
-    double m_gasGainErr;
-    double m_eneReso;
-    double m_eneResoErr;
-};
-
-CalParams::CalParams( )
-    : m_gasGain    ( 0.0 )
-    , m_gasGainErr ( 0.0 )
-    , m_eneReso    ( 0.0 )
-    , m_eneResoErr ( 0.0 )
-{
-    
-}
-
-CalParams::~CalParams( )
-{
-    
-}
+#include "def.h"
 
 CalParams getGasGain( const String& inputDir, const String& outputDir, const double& gainFactor, const String& calSource )
 {

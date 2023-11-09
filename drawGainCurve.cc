@@ -1,4 +1,4 @@
-#include "inc/shinclude.h"
+#include "def.h"
 #include "getGasGain.cc"
 
 void drawGainCurve( const String& inputFileList, const String& outputDir, const double& gainFactor, const String& calSource )

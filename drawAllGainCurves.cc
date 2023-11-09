@@ -1,11 +1,4 @@
-#include "inc/shinclude.h"
-
-struct GasMixtureParams {
-    String m_gasMixture;
-    double m_gainCurveConst;
-    double m_gainCurveSlope;
-};
-
+#include "def.h"
 
 void drawAllGainCurves( const String& inputFileList, const String& outputDir )
 {
@@ -25,7 +18,6 @@ void drawAllGainCurves( const String& inputFileList, const String& outputDir )
         ss >> filePath >> gasMixture;
         fileTable.insert( std::make_pair( gasMixture, filePath ) );
     }
-
 
     std::ofstream ofs( Form( "%s/gainCurveList.txt", outputDir.c_str( ) ) );
     ofs << "#GasMixture\tConstant\tSlope" << std::endl;
