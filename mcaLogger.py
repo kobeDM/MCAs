@@ -9,7 +9,7 @@ import datetime
 
 from influxdb import InfluxDBClient
 
-class ScalerLoggingEventHandler(LoggingEventHandler):
+class myLoggingEventHandler(LoggingEventHandler):
     def on_modified(self, event):
 
         if event.is_directory == False:
@@ -26,7 +26,7 @@ class ScalerLoggingEventHandler(LoggingEventHandler):
                 utc = datetime.datetime.utcnow()
                 print("real rate: " + str(event_rate_real))
                 print("live rate: " + str(event_rate_live))
-                print("utc      : " + utc )
+                print("utc      : " + str(utc))
                 print("--------------------------------------------------")
                 json_data = [
                     {
@@ -61,8 +61,8 @@ if __name__ == "__main__":
         datefmt = '%Y-%m-%d %H:%M:%S' 
     )
     # path = sys.argv[1] if len(sys.argv) > 1 else '.'
-    path = 'C:\\Users\\Ryota Namai\\Desktop\\20240116'
-    event_handler = ScalerLoggingEventHandler()
+    path = 'C:\\Users\\msgc\\miraclue\\bgo\data\\20240118'
+    event_handler = myLoggingEventHandler()
     observer = Observer()
     observer.schedule(event_handler, path, recursive = True)
     observer.start()
