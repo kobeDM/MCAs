@@ -62,17 +62,23 @@ void mca2root() {
         return;
     }
 
+    int fileN = 0;
     int ch = 0;
+    int total_event = 0;
     int cch[chN], event[chN], ut;
-    float livetime, realtime;
+    float livetime, realtime, liverate, realrate;
 
     TFile *file = new TFile(rootfliepath.c_str(), "RECREATE");
     TTree *tree = new TTree("tree", "tree");
+    tree->Branch("fileN"   , &fileN,    "fileN/I"               );
     tree->Branch("ch"      , cch,       Form("ch[%i]/I",    chN));
     tree->Branch("event"   , event,     Form("event[%i]/I", chN));
-    tree->Branch("unixtime", &ut,       "ut/I"                  );
+    tree->Branch("total_event", &total_event, "total_event/I"   );
+    tree->Branch("unixtime", &ut,       "unixtime/I"            );
     tree->Branch("livetime", &livetime, "livetime/F"            );
     tree->Branch("realtime", &realtime, "realtime/F"            );
+    tree->Branch("liverate", &liverate, "liverate/F"            );
+    tree->Branch("realrate", &realrate, "realrate/F"            );
 
     int count, tmp;
     std::string filename, line, filename_line;
@@ -94,12 +100,17 @@ void mca2root() {
             if (strncmp(line.c_str(), "REAL_TIME" ,  9) == 0) realtime = std::stof(erase_str(line, "REAL_TIME - "));
             if (std::isdigit(line[0])) {
                 event[ch] = count;
+                total_event += count;
                 cch[ch] = ch;
                 ch++;
             }
         }
+        liverate = static_cast<float>(total_event) / livetime;
+        realrate = static_cast<float>(total_event) / realtime;
         tree->Fill();
         ch = 0;
+        total_event = 0;
+        fileN++;
         std::cout << "unixtime   : " << ut       << std::endl;
         std::cout << "live  time : " << livetime << std::endl;
         std::cout << "real  time : " << realtime << std::endl;
