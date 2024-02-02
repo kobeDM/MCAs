@@ -14,7 +14,7 @@ if not os.path.exists(datadirpath):
     print("Error: data directory not found")
     sys.exit(1)
 if not os.path.exists(outputddirpath):
-    os.mkdir(outputddirpath)
+    os.makedirs(outputddirpath)
 
 # Make datafiles.txt
 datafiles = sorted(glob.glob(datadirpath + "/*.mca"))
@@ -32,12 +32,14 @@ def run_draw():
     cmd = ["root", "-l", "-q", "-b", "source/draw.cc"]
     subprocess.run(cmd)
 
+
 def send_items(items):
     for item in items:
         if os.path.isfile(item):
             os.system("mv " + item + " " + outputddirpath)
         else:
             print("Error: " + item + " is not file or directory")
+
 
 if __name__ == "__main__":
     print("> mca2root start")

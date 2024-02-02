@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <cctype>
+#include <vector>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -65,16 +66,16 @@ void mca2root() {
     int fileN = 0;
     int ch = 0;
     int total_event = 0;
-    int cch[chN], event[chN], ut;
+    int unixtime;
     float livetime, realtime, liverate, realrate;
+    std::vector<int> *event = new std::vector<int>;
 
     TFile *file = new TFile(rootfliepath.c_str(), "RECREATE");
     TTree *tree = new TTree("tree", "tree");
-    tree->Branch("fileN"   , &fileN,    "fileN/I"               );
-    tree->Branch("ch"      , cch,       Form("ch[%i]/I",    chN));
-    tree->Branch("event"   , event,     Form("event[%i]/I", chN));
+    tree->Branch("fileN", &fileN,    "fileN/I"                  );
+    tree->Branch("event", event);
     tree->Branch("total_event", &total_event, "total_event/I"   );
-    tree->Branch("unixtime", &ut,       "unixtime/I"            );
+    tree->Branch("unixtime", &unixtime, "unixtime/I"            );
     tree->Branch("livetime", &livetime, "livetime/F"            );
     tree->Branch("realtime", &realtime, "realtime/F"            );
     tree->Branch("liverate", &liverate, "liverate/F"            );
@@ -95,13 +96,14 @@ void mca2root() {
             std::getline(file, line);
             std::stringstream ss(line);
             ss >> count;
-            if (strncmp(line.c_str(), "START_TIME", 10) == 0) ut = str2ut(erase_str(line, "START_TIME - "));
+            if (strncmp(line.c_str(), "START_TIME", 10) == 0) unixtime = str2ut(erase_str(line, "START_TIME - "));
             if (strncmp(line.c_str(), "LIVE_TIME" ,  9) == 0) livetime = std::stof(erase_str(line, "LIVE_TIME - "));
             if (strncmp(line.c_str(), "REAL_TIME" ,  9) == 0) realtime = std::stof(erase_str(line, "REAL_TIME - "));
             if (std::isdigit(line[0])) {
-                event[ch] = count;
+                for (int i = 0; i < count; i++) {
+                    event->push_back(ch);
+                }
                 total_event += count;
-                cch[ch] = ch;
                 ch++;
             }
         }
@@ -110,8 +112,9 @@ void mca2root() {
         tree->Fill();
         ch = 0;
         total_event = 0;
+        event->clear();
         fileN++;
-        std::cout << "unixtime   : " << ut       << std::endl;
+        std::cout << "unixtime   : " << unixtime       << std::endl;
         std::cout << "live  time : " << livetime << std::endl;
         std::cout << "real  time : " << realtime << std::endl;
         std::cout << "----------------------------------------" << std::endl;
@@ -119,5 +122,6 @@ void mca2root() {
     std::cout << "Total files : " << tree->GetEntries() << std::endl;
     tree->Write();
     file->Close();
+    delete event;
     return;
 }

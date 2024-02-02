@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "TROOT.h"
 #include "TStyle.h"
@@ -30,17 +31,20 @@ void draw() {
     }
 
     // draw
-    int event[chN];
+    std::vector<int> *event = new std::vector<int>;
     int eventN = tree->GetEntries();
     tree->SetBranchAddress("event", event);
 
     TCanvas *cvs = new TCanvas("cvs", "cvs", 800, 600);
     cvs->SetLogy();
     TH1D *sp_raw = new TH1D("sp_raw", "sp_raw", chN, 0, chN);
+    int event_size;
     for (int i = 0; i < eventN; i++) {
         tree->GetEntry(i);
-        for (int j = 0; j < chN; j++) {
-            sp_raw->SetBinContent(j, event[j]);
+        event_size = event->size();
+        for (int j = 0; j < event_size; j++) {
+            // sp_raw->SetBinContent(event->at(j), j);
+            sp_raw->Fill(event->at(j));
         }
     }
     sp_raw->Rebin(rebin);
@@ -50,5 +54,7 @@ void draw() {
     sp_raw->Draw();
     cvs->SaveAs("./sp_raw.png");
     cvs->SaveAs("./sp_raw.pdf");
+
+    delete event;
     return;
 }

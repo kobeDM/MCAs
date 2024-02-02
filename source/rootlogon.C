@@ -9,7 +9,7 @@
     TColor::CreateGradientColorTable( NRGBs, stops, red, green, blue, NCont );
     gStyle->SetNumberContours( NCont );
 
-    gInterpreter->AddIncludePath("./ShUtil");
-    std::cout << "Adding the include path to : "  << gSystem->GetIncludePath( ) << std::endl;
+    // gInterpreter->AddIncludePath("./ShUtil");
+    // std::cout << "Adding the include path to : "  << gSystem->GetIncludePath( ) << std::endl;
 
 }

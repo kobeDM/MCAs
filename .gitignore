@@ -33,3 +33,6 @@
 
 .vscode
 *.txt
+*.png
+*.pdf
+*.root
