@@ -16,7 +16,7 @@ if not os.path.exists(datadirpath):
 if not os.path.exists(outputddirpath):
     os.makedirs(outputddirpath)
 
-# Make datafiles.txt
+# Make datafile list
 datafiles = sorted(glob.glob(datadirpath + "/*.mca"))
 with open("datafiles.txt", "w") as f:
     for datafile in datafiles:
@@ -25,11 +25,6 @@ with open("datafiles.txt", "w") as f:
 
 def run_mca2root():
     cmd = ["root", "-l", "-q", "-b", "source/mca2root.cc"]
-    subprocess.run(cmd)
-
-
-def run_draw():
-    cmd = ["root", "-l", "-q", "-b", "source/draw.cc"]
     subprocess.run(cmd)
 
 
@@ -46,16 +41,10 @@ if __name__ == "__main__":
     run_mca2root()
     print("> mca2root done")
     print("---")
-    print("> draw start")
-    run_draw()
-    print("> draw done")
-    print("---")
     print("> send items")
     items = [
         "datafiles.txt",
         "raw.root",
-        "sp_raw.pdf",
-        "sp_raw.png",
     ]
     send_items(items)
     print("> done")
