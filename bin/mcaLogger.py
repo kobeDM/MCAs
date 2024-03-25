@@ -1,13 +1,16 @@
 #! /usr/bin/python3
 
-import sys
 import time
 import logging
+import json
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler
 import datetime
 
 from influxdb import InfluxDBClient
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
 
 class myLoggingEventHandler(LoggingEventHandler):
     def on_modified(self, event):
@@ -30,15 +33,15 @@ class myLoggingEventHandler(LoggingEventHandler):
                 print("--------------------------------------------------")
                 json_data = [
                     {
-                        'measurement' : 'mca',
+                        'measurement' : config['influxdb']['measurement'],
                         'fields' : {
                             'event_rate_live' : event_rate_live,
                             'event_rate_real' : event_rate_real,
                         },
                         'time' : utc,
                         'tags' : {
-                            'host'   : 'BGO',
-                            'device' : 'BGO',
+                            'host'   : config['influxdb']['tag']['host'],
+                            'device' : config['influxdb']['tag']['device'],
                         }
                     }
                 ]
@@ -46,13 +49,12 @@ class myLoggingEventHandler(LoggingEventHandler):
 
 
 if __name__ == "__main__":
-
     client = InfluxDBClient( 
-        host = "10.37.0.214",
-        port = "8086",
-        username = "root",
-        password = "root",
-        database = "miraclue"
+        host = config['influxdb']['host'],
+        port = config['influxdb']['port'],
+        username = config['influxdb']['username'],
+        password = config['influxdb']['password'],
+        database = config['influxdb']['database'],
     )
 
     logging.basicConfig( 
@@ -60,15 +62,14 @@ if __name__ == "__main__":
         format = '%(asctime)s - %(message)s',
         datefmt = '%Y-%m-%d %H:%M:%S' 
     )
-    # path = sys.argv[1] if len(sys.argv) > 1 else '.'
-    path = 'C:\\Users\\msgc\\miraclue\\bgo\data\\20240118'
+    path = config['watchdog']['storage']
     event_handler = myLoggingEventHandler()
     observer = Observer()
     observer.schedule(event_handler, path, recursive = True)
     observer.start()
     try:
         while True:
-            time.sleep(1)
+            time.sleep(config['watchdog']['interval'])
     except KeyboardInterrupt:
         observer.stop()
     observer.join()

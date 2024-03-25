@@ -1,0 +1,23 @@
+{
+    "watchdog": {
+        "storage": "C:\\Users\\msgc\\miraclue\\bgo\\data\\20240118",
+        "interval": 1
+    },
+    "influxDB": {
+        "host": "10.37.0.214",
+        "port": "8086",
+        "username": "root",
+        "password": "root",
+        "database": "miraclue",
+        "measurement": "bgo",
+        "tag": {
+            "host": "bgo",
+            "device": "bgo"
+        }
+    },
+    "scp": {
+        "host": "10.37.0.218",
+        "path": "/home/msgc/miraclue/bgo/data/20240118"
+
+    }
+}
