@@ -1,0 +1,5 @@
+# Hashes of file build rules.
+7e2db524872bc47dd8932a9d6b1de077 SpectrometerExample/moc_QTableWidgetDeviceItem.cpp
+be1d6a2826bbc8f27b9b2b8480642a78 SpectrometerExample/moc_mainwindow.cpp
+85cdd758fa2454a932fe6f8eadd3a8ea SpectrometerExample/moc_qcustomgraph.cpp
+8c1fa9709a99bdc5e3901c706dd48300 SpectrometerExample/ui_mainwindow.h

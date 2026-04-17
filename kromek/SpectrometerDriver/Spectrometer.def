@@ -1,0 +1,19 @@
+LIBRARY	"SpectrometerDriver"
+EXPORTS
+	kr_GetVersionInformation	@1	
+	kr_Initialise	@2
+	kr_Destruct	@3
+	kr_GetNextDetector	@4
+	kr_SetDeviceChangedCallback	@5
+	kr_SetDataReceivedCallback	@6
+	kr_GetAcquiredData	@7
+	kr_IsAcquiringData	@8
+	kr_BeginDataAcquisition	@9
+	kr_StopDataAcquisition	@10
+	kr_GetDeviceName	@11
+	kr_GetDeviceManufacturer	@12
+	kr_GetDeviceSerial	@13
+	kr_GetDeviceVendorID	@14
+	kr_GetDeviceProductID	@15
+	kr_SendInt8ConfigurationCommand	@16
+	kr_SendInt16ConfigurationCommand	@17

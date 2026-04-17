@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../libs/linux64/release/libSpectrometerDriverStatic.a CMakeFiles/SpectrometerDriverStatic.dir/Detector.cpp.o CMakeFiles/SpectrometerDriverStatic.dir/DriverMgr.cpp.o CMakeFiles/SpectrometerDriverStatic.dir/SpectrometerDriver.cpp.o CMakeFiles/SpectrometerDriverStatic.dir/stdafx.cpp.o
+/usr/bin/ranlib ../libs/linux64/release/libSpectrometerDriverStatic.a

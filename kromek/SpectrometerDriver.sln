@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KromekDriver", "KromekDriver\KromekDriver.vcxproj", "{4699A621-242A-40AB-AF3C-FC24642AE944}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpectrometerDriver", "SpectrometerDriver\SpectrometerDriver.vcxproj", "{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4699A621-242A-40AB-AF3C-FC24642AE944} = {4699A621-242A-40AB-AF3C-FC24642AE944}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Debug|Win32.Build.0 = Debug|Win32
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Debug|x64.ActiveCfg = Debug|x64
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Debug|x64.Build.0 = Debug|x64
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Release|Win32.ActiveCfg = Release|Win32
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Release|Win32.Build.0 = Release|Win32
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Release|x64.ActiveCfg = Release|x64
+		{4699A621-242A-40AB-AF3C-FC24642AE944}.Release|x64.Build.0 = Release|x64
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Debug|Win32.Build.0 = Debug|Win32
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Debug|x64.ActiveCfg = Debug|x64
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Debug|x64.Build.0 = Debug|x64
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Release|Win32.ActiveCfg = Release|Win32
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Release|Win32.Build.0 = Release|Win32
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Release|x64.ActiveCfg = Release|x64
+		{1F47FBC7-B0EB-4BEB-A7E3-598E49F49713}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

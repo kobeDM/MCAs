@@ -1,0 +1,73 @@
+{
+    "MCA": {
+	"MCA0": {
+	    "active": 1,
+	    "MCA_type": "MCA8000D",
+	    "_comment for MCA_type":"MCA8000D or K102",
+	    "detector": "MWPC",
+	    "SN": 718,
+	    "threshold": 5,
+	    "MCAchannel": 8191,
+	    "dynamicrange": 2,
+	    "_comment for dynamicrange":"1 for 1V, 2 for 10V",
+	    "ROI0_min": 0,
+	    "ROI0_max": 8191,
+	    "ROI1_min": 1024,
+	    "ROI1_max": 8191,
+	    "ROI2_min": 0,
+	    "ROI2_max": 1024,
+	    "ROI3_min": 3000,
+	    "ROI3_max": 8191,
+	    "ROI4_min": 0,
+	    "ROI4_max": 8191
+	},
+	"MCA1": {
+	    "active": 0,
+	    "MCA_type": "MCA8000D",
+	    "_comment for MCA_type":"MCA8000D or K102",
+	    "detector": "NaI",
+	    "SN": 794,
+	    "threshold": 2,
+	    "MCAchannel": 8191,
+	    "dynamicrange": 1,
+	    "_comment for dynamicrange":"1 for 1V, 2 for 10V",
+	    "ROI0_min": 0,
+	    "ROI0_max": 8191,
+	    "ROI1_min": 220,
+	    "ROI1_max": 300,
+	    "ROI2_min": 420,
+	    "ROI2_max": 640,
+	    "ROI3_min": 540,
+	    "ROI3_max": 640,
+	    "ROI4_min": 640,
+	    "ROI4_max": 8191
+	},
+	"MCA2": {
+	    "active": 0,
+	    "MCA_type": "K102",
+	    "_comment for MCA_type":"MCA8000D or K102",
+	    "detector": "NaI",
+	    "SN": 0,
+	    "threshold": 1,
+	    "MCAchannel": 4095,
+	    "dynamicrange": 1,
+	    "_comment for dynamicrange":"1 for 1V, 2 for 10V",
+	    "ROI0_min": 0,
+	    "ROI0_max": 8191,
+	    "ROI1_min": 220,
+	    "ROI1_max": 300,
+	    "ROI2_min": 420,
+	    "ROI2_max": 640,
+	    "ROI3_min": 540,
+	    "ROI3_max": 640,
+	    "ROI4_min": 640,
+	    "ROI4_max": 8191
+	}
+
+    },
+    "INFLUXDB":{
+	"host":"10.37.0.170",
+	"port":"8086",
+	"database":"miraclue" 
+    }
+}

@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -rdynamic CMakeFiles/K102.dir/K102.c.o -o K102  -Wl,-rpath,/home/kobepp/MCAs/kromek/libs/linux64/release ../libs/linux64/release/libSpectrometerDriver.so ../libs/linux64/release/libKromekDriver.a -Wl,-Bstatic -lrt -Wl,-Bdynamic -ludev 

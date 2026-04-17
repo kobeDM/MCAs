@@ -1,0 +1,114 @@
+#include "SpectrometerDriver.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#define DEBUG 1
+void initerrorhandling(){
+  printf("error\n");
+}
+void datarecieved(){
+  printf("data recieved\n");
+}
+int main(int argc, char *argv[])
+{
+  // Initialise the library with no error callback (not recommended)
+  // Go through every detector, list its details and take a 5 second acquisition
+  //while ((detectorID = kr_GetNextDetector(detectorID))){
+  char nameBuffer[200];
+  int nameLength = 200;
+  char SNBuffer[200];
+  int SNLength = 200;
+  const int MAX_NUM_OF_DETECTORS=8;
+  int num_of_detectors;
+  int det_index=0;
+  int SN;
+  int status=0;
+  int livetime,realtime;//in sec
+  unsigned int totalCounts = 0;
+  unsigned int detectorID[MAX_NUM_OF_DETECTORS];
+  //int pProduct, pMajor, pMinor, pBuild;
+  int *initerrordata;
+  printf ("***DAQ for kromek MCA***\n");
+  kr_Initialise(NULL, NULL);
+  //sleep(5);
+  livetime=realtime=atoi(argv[1]);
+  printf ("scanning the devices...\n");
+  detectorID[det_index] = kr_GetNextDetector(0);//to get the first ID
+  while(detectorID[det_index]){    
+    //printf (" detctor %d: ID %u\n",det_index, detectorID[det_index]);
+    detectorID[det_index+1] = kr_GetNextDetector(detectorID[det_index]);
+    det_index++;
+  }
+  num_of_detectors=det_index;
+  
+  //det_index=0;
+  //kr_Initialise(initerrorhandling,initerrordata);
+  //kr_GetVersionInformation(&pProduct,&pMajor,&pMinor,&pBuild);
+  //not reading the device
+
+  printf("number of detectors: %d\n",num_of_detectors);
+  for(det_index=0;det_index<num_of_detectors;det_index++){
+    kr_GetDeviceName(detectorID[det_index], nameBuffer, nameLength, &nameLength);
+    kr_GetDeviceSerial(detectorID[det_index], SNBuffer, SNLength, &SNLength);
+    printf (" Detector properties (index=%d): ID %u, Name %s, SN %s %d\n", det_index,detectorID[det_index], nameBuffer,SNBuffer,SNLength);
+  }
+  //printf (" Versions: Product %d, Major %d, Minor %d, Build %d\n", pProduct,pMajor,pMinor,pBuild);
+
+  
+  det_index=0;
+  kr_ClearAcquiredData(detectorID[det_index]);
+  printf(" Data cleared.\n");
+      
+  status=kr_IsAcquiringData(detectorID[det_index]);
+  printf(" status: %d\n",status);
+  printf (" DAQ time: (live) %d sec., (real) %d sec\n",livetime,realtime);	  kr_BeginDataAcquisition(detectorID[det_index], livetime*1000, realtime*1000);
+  //kr_BeginDataAcquisition(0, livetime*1000, realtime*1000);
+  //kr_BeginDataAcquisition(detectorID[det_index], 0, 0);
+  //kr_SetDataReceivedCallback(datarecieved, NULL);
+  printf("DAQ started...\n");
+  //status=kr_IsAcquiringData(detectorID[det_index]);
+  //int i=0;
+  //while(1){
+    //printf("%d",i);
+    //status=kr_IsAcquiringData(detectorID[det_index]);
+    //printf(" status (runnning): %d\n",status);
+    //sleep(1);
+  // }
+  sleep(livetime+3);
+
+  det_index=0;
+  printf (" detctor %d: ID %u\n",det_index, detectorID[det_index]);
+  
+
+  
+  /**  
+  for(det_index=0;det_index<num_of_detectors;det_index++){
+    kr_GetDeviceName(detectorID[det_index], nameBuffer, nameLength, &nameLength);
+    printf (" Detector properties (index=%d): ID %u, Name %s, SN %s %d\n", det_index,detectorID[det_index], nameBuffer,SNBuffer,SNLength);
+  }
+  det_index=0;
+  detectorID[det_index] = kr_GetNextDetector(0);//to get the first ID
+  while(detectorID[det_index]){    
+    printf (" detctor %d: ID %u\n",num_of_detectors, detectorID[det_index]);
+    detectorID[det_index+1] = kr_GetNextDetector(detectorID[det_index]);
+    det_index++;
+    }**/
+  //i++;
+    //if (!status)break;
+  //}
+  //status=2;
+  //printf(" status(after): %d\n",status);
+      
+      // Print out the total counts acquired during the acquisition
+  //kr_GetAcquiredData(detectorID[det_index], NULL, &totalCounts, NULL, NULL);
+      //printf("\nTotal Counts = %u\n", totalCounts);
+      //}
+  printf("stopping the DAQ...\n");
+  //kr_StopDataAcquisition(10);
+  //  kr_StopDataAcquisition(detectorID[det_index]);
+  printf("DAQ stopped...\n");
+	
+  // Cleanup the library
+  //kr_Destruct();
+  return 0;
+}

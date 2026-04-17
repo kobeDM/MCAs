@@ -1,0 +1,292 @@
+
+void hist_comp(const std::string inputFilePath,const std::string inputFilePath2){
+  const double fitmin=240;
+  const double fitmax=400;
+
+  TCanvas *Resultscv = new TCanvas("summarycv","summarycv",800,600);
+  const int row=2;
+  const int column=2;
+  Resultscv->Divide(row,column);
+  for(int i=0;i<row*column;i++){
+  Resultscv->cd(i+1)->SetGrid(1);
+  }
+  Resultscv->cd(1)->SetLogy(1);
+  Resultscv->cd(2)->SetLogy(0);
+
+  //const int chN=8;
+  TFile *file[4];
+  TCanvas *phcv[2];
+  double gain_correction[2];
+  //TCanvas *resulteachcv[chN];
+  TH1D *hist[4];
+    //,*hkeV[4],*hkeVL[4];//2 for subtracted histgram, 3 for ratio
+  string title[2];
+  //TText *tth[8],*tthM[8],*tthL[8];
+  //char c_ths[8][128];
+  // const int maxkeVL=1000;
+  //const int minkeVL=-1000;
+  /**
+  const int maxkeV=10;
+  const int minkeV=-10;
+  const int maxMeV=1;
+  const int minMeV=-1;
+  const double ratiomin=0.1;
+  const double ratiomax=10;
+  const double ratiocal_minL=25;
+  const double ratiocal_maxL=50;
+  const double ratiocal_minM=100;
+  const double ratiocal_maxM=500;
+  **/
+  file[0]= TFile::Open(inputFilePath.c_str( ) );
+
+  file[1]= TFile::Open(inputFilePath2.c_str( ) );
+  /**
+  file[2]=TFile::Open((inputFilePath.substr(0,inputFilePath.find("/")+1)+"specvar.root").c_str());
+  file[3]=TFile::Open((inputFilePath2.substr(0,inputFilePath2.find("/")+1)+"specvar.root").c_str());
+  TTree* specTree=(TTree*)file[2]->Get("spec_tree");
+  TTree* specTree2=(TTree*)file[3]->Get("spec_tree");
+  specTree->SetBranchAddress("gain_correction", &gain_correction[0]);
+  specTree->GetEntry(0);
+  specTree2->SetBranchAddress("gain_correction", &gain_correction[1]);
+  specTree2->GetEntry(0);**/
+  //  cerr<<"file 0:"<<inputFilePath<<endl;
+  //cerr<<"file 1:"<<inputFilePath2<<endl;
+
+  cerr<<"file 0: "<<inputFilePath<<endl;
+
+  //<<"\t gain correction: "<<fixed<<setprecision(2)<<gain_correction[0]
+  //cerr<<"file 1: "<<inputFilePath2<<"\t gain correction: "<<fixed<<setprecision(2)<<gain_correction[1]<<endl;
+
+  for(int i=0;i<2;i++){
+    hist[i]=(TH1D*)file[i]->Get("hist_sum");
+  }
+  hist[0]->SetLineColor(2);
+  hist[1]->SetLineColor(4);
+
+  hist[2]=(TH1D*)hist[0]->Clone();
+  hist[2]->Add(hist[1],-1);
+  hist[2]->SetTitle("subtracted");
+
+  TF1* fg[2];
+  fg[0]=new TF1("fg","gaus");
+  fg[1]=new TF1("fg","gaus");
+  //TF1*   fdg=new TF1("fdg","fg[0]+fg[1]");
+  TF1 *fdg = new TF1("dgaus","[0]*TMath::Gaus(x,[1],[2])+[3]*TMath::Gaus(x,[4],[5])",0,2000);
+  fdg->SetParameters(1,350,50,0.01,1000,100);
+  //hist[2]->Fit(fg,"","",fitmin,fitmax);
+  //hist[2]->Fit(fg[0],"","");
+  hist[2]->Fit(fdg,"","",fitmin,fitmax);
+  char c_mean[2][16];
+  //sprintf(c_mean,"fit mean=%.0f",fg[0]->GetParameter(1));
+  sprintf(c_mean[0],"fit mean=%.0f",fdg->GetParameter(1));
+  sprintf(c_mean[1],"fit mean=%.0f",fdg->GetParameter(4));
+  cerr<<c_mean[0]<<endl;
+  //t_fit_mean=new TText(0.3,0.4*PHHistMax_subLogY,c_means);
+
+  TText *t_params[2];
+  t_params[0]= new TText(fdg->GetParameter(1), fdg->GetParameter(0),c_mean[0]);
+  t_params[1]= new TText(fdg->GetParameter(4), fdg->GetParameter(3),c_mean[1]);
+
+  
+  Resultscv->cd(1);
+  hist[0]->Draw();
+  hist[1]->Draw("same");
+  Resultscv->cd(2);
+  hist[0]->Draw();
+  hist[1]->Draw("same");
+  
+  Resultscv->cd(4);
+  hist[2]->Draw();
+  t_params[0]->Draw();
+ t_params[1]->Draw();
+  /**
+  hkeV[2]=(TH1D*)hkeV[0]->Clone();
+  hMeV[2]=(TH1D*)hMeV[0]->Clone();
+  hkeVL[3]=(TH1D*)hkeVL[0]->Clone();
+
+  hMeV[3]=(TH1D*)hMeV[0]->Clone();
+  hkeVL[2]->SetName("hkeVL_sub");
+  hkeV[2]->SetName("hkeV_sub");
+  hMeV[2]->SetName("hMeV_sub");
+  hkeV[2]->Add(hkeV[1],-1);
+  hMeV[2]->Add(hMeV[1],-1);
+  hkeVL[3]->Divide(hkeVL[1]);
+  hkeV[3]->Divide(hkeV[1]);
+  hMeV[3]->Divide(hMeV[1]);
+
+
+
+  hkeVL[3]->GetXaxis()->SetTitle( "ratio" );
+
+  hkeV[3]->GetXaxis()->SetTitle( "ratio" );
+  hMeV[3]->GetXaxis()->SetTitle( "ratio" );
+  TF1 *fL = new TF1("fL","[0]");
+  fL->SetLineColor(4);
+  hkeVL[3]->Fit(fL,"","",ratiocal_minL,ratiocal_maxL);
+  TF1 *fM = new TF1("fM","[0]");
+  fM->SetLineColor(4);
+  hkeV[3]->Fit(fM,"","",ratiocal_minM,ratiocal_maxM);
+  //for(int i=0;i<2;i++){
+
+  //  title[i]=hkeV[i]->GetTitle();
+  //  sprintf(c_ths[i],"%s",(title[i].substr(0,title[i].find("wave")-1)).c_str());
+  //}
+  //  sprintf(c_ths[0],"%s",inputFilePath.c_str());
+  //sprintf(c_ths[1],"%s",inputFilePath2.c_str());
+  sprintf(c_ths[0],"%s GC=%.2f",inputFilePath.c_str(),gain_correction[0]);
+  sprintf(c_ths[1],"%s GC=%.2f",inputFilePath2.c_str(),gain_correction[1]);
+  sprintf(c_ths[2],"subtracted");
+  //sprintf(c_ths[3],"ratio");
+
+  sprintf(c_ths[3],"ratio (avg=%.2lf +- %.2lf in %.0lf - %.0lf keV)",fL->GetParameter(0),fL->GetParError(0),ratiocal_minL,ratiocal_maxL);
+  sprintf(c_ths[4],"ratio (avg=%.2lf +- %.2lf in %.0lf - %.0lf keV)",fM->GetParameter(0),fM->GetParError(0),ratiocal_minM,ratiocal_maxM);
+  tthL[0]=new TText(5,  hkeVL[0]->GetMaximum()/20.,c_ths[0]);
+  tthL[1]=new TText(5,  hkeVL[0]->GetMaximum()/80.,c_ths[1]);
+  tth[0]=new TText(150,  hkeV[0]->GetMaximum()/20.,c_ths[0]);
+  tth[1]=new TText(150,  hkeV[0]->GetMaximum()/80.,c_ths[1]);
+  tthM[0]=new TText(1.5, hMeV[0]->GetMaximum()/20.,c_ths[0]);
+  tthM[1]=new TText(1.5, hMeV[0]->GetMaximum()/80.,c_ths[1]);
+  tthL[2]=new TText(25,   maxkeVL/4.,c_ths[2]);
+  tth[2]=new TText(150,   maxkeV/4.,c_ths[2]);
+  tthM[2]=new TText(1.5,  maxMeV/4.,c_ths[2]);
+  tthL[3]=new TText(5,   2,c_ths[3]);
+  tth[3]=new TText(150,   2,c_ths[4]);
+
+  tthM[3]=new TText(1.5,  2,c_ths[4]);
+  const double txtsize=0.08;
+  tth[0]->SetTextSize(txtsize);
+  tth[1]->SetTextSize(txtsize);
+  tth[2]->SetTextSize(txtsize);
+  tth[3]->SetTextSize(txtsize);
+  tthL[0]->SetTextSize(txtsize);
+  tthL[1]->SetTextSize(txtsize);
+  tthL[2]->SetTextSize(txtsize);
+  tthL[3]->SetTextSize(txtsize);
+  tthM[0]->SetTextSize(txtsize);
+  tthM[1]->SetTextSize(txtsize);
+
+
+  tthM[2]->SetTextSize(txtsize);
+  tth[3]->SetTextSize(txtsize);
+  tth[0]->SetTextColor(2);
+  tthM[0]->SetTextColor(2);
+  tthL[0]->SetTextColor(2);
+  tth[2]->SetTextColor(4);
+  tthM[2]->SetTextColor(4);
+  tthL[2]->SetTextColor(4);
+  tth[3]->SetTextColor(4);
+  tthM[3]->SetTextColor(4);
+  tthL[3]->SetTextColor(4);
+  hMeV[0]->SetLineColor(2);
+  hkeV[0]->SetLineColor(2);
+  hkeVL[0]->SetLineColor(2);
+  hMeV[2]->SetLineColor(4);
+
+  hkeV[2]->SetLineColor(4);
+  hkeVL[2]->SetLineColor(4);
+  hMeV[3]->SetLineColor(4);
+  hkeV[3]->SetLineColor(4);
+  hkeVL[3]->SetLineColor(4);
+  hkeVL[2]->SetMaximum(maxkeVL);
+  hkeVL[2]->SetMinimum(minkeVL);
+  hkeV[2]->SetMaximum(maxkeV);
+  hkeV[2]->SetMinimum(minkeV);
+  hMeV[2]->SetMaximum(maxMeV);
+  hMeV[2]->SetMinimum(minMeV);
+  **/
+  /**
+  hkeVL[3]->SetMaximum(ratiomax);
+  hkeVL[3]->SetMinimum(ratiomin);
+  hkeV[3]->SetMaximum(ratiomax);
+  hkeV[3]->SetMinimum(ratiomin);
+  hMeV[3]->SetMaximum(ratiomax);
+  hMeV[3]->SetMinimum(ratiomin);
+
+
+
+  //for(int i;i<12;i++){
+  //  Resultscv->cd(i+1)->SetGrid(1);
+  // }
+
+
+
+  Resultscv->cd(1);
+   Resultscv->cd(1)->SetGrid(1);
+  hkeVL[0]->Draw();
+  hkeVL[1]->Draw("same");
+  tthL[0]->Draw("same");
+  tthL[1]->Draw("same");
+
+  //  Resultscv->cd(2);
+  Resultscv->cd(2)    ->SetLogy(1);
+  Resultscv->cd(2)->SetGrid(1);
+  hkeV[0]->Draw();
+  hkeV[1]->Draw("same");
+  tth[0]->Draw("same");
+  tth[1]->Draw("same");
+
+  //Resultscv->cd(3);
+  Resultscv->cd(3)    ->SetLogy(1);
+  Resultscv->cd(3)->SetGrid(1);
+    hMeV[0]->Draw();
+  hMeV[1]->Draw("same");
+  tthM[0]->Draw("same");
+  tthM[1]->Draw("same");
+
+  Resultscv->cd(4)    ->SetLogy(1);
+  Resultscv->cd(4)->SetGrid(1);
+  hkeVL[3]->Draw();
+  tthL[3]->Draw("same");
+
+  Resultscv->cd(5)    ->SetLogy(1);
+  Resultscv->cd(5)->SetGrid(1);
+  hkeV[3]->Draw();
+  tth[3]->Draw("same");
+
+  Resultscv->cd(6)    ->SetLogy(1);
+  Resultscv->cd(6)->SetGrid(1);
+  hMeV[3]->Draw();
+  tthM[3]->Draw("same");
+
+
+
+  //  Resultscv->cd(7);
+  Resultscv->cd(7)    ->SetLogy(0);
+  Resultscv->cd(7)->SetGrid(1);
+  hkeVL[0]->Draw();
+  hkeVL[1]->Draw("same");
+  tth[0]->Draw("same");
+  tth[1]->Draw("same");
+
+
+  //  Resultscv->cd(5);
+  Resultscv->cd(8)    ->SetLogy(0);
+  Resultscv->cd(8)->SetGrid(1);
+  hkeV[0]->Draw();
+  hkeV[1]->Draw("same");
+  tth[0]->Draw("same");
+  tth[1]->Draw("same");
+
+  //  Resultscv->cd(9);
+  Resultscv->cd(9)    ->SetLogy(0);
+  Resultscv->cd(9)->SetGrid(1);
+  hMeV[0]->Draw();
+  hMeV[1]->Draw("same");
+  tthM[0]->Draw("same");
+  tthM[1]->Draw("same");
+
+  // Resultscv->cd(7);
+  Resultscv->cd(10)    ->SetLogy(0);
+  Resultscv->cd(10)->SetGrid(1);
+  hkeVL[2]->Draw();
+  tthL[2]->Draw("same");
+
+  Resultscv->cd(11)    ->SetLogy(0);
+  hkeV[2]->Draw();
+  tth[2]->Draw("same");
+
+  Resultscv->cd(12)    ->SetLogy(0);
+  hMeV[2]->Draw();
+  tthM[2]->Draw("same");
+**/
+}

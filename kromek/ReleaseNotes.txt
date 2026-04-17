@@ -1,0 +1,60 @@
+Spectrometer Driver Release Notes
+
+=================================================
+v3.1.16
+=================================================
+
+Linux driver module now supports setting vaues such as LLD on the device. 
+It is still unable to read settings from the device.
+
+=================================================
+v3.0.15
+=================================================
+
+A new implementation of the driver has been created with significant changes to the underlying code. With the exception of the important changes listed below usage of the library remains the same as previous releases.
+The important changes listed below are not backwards compatible with older releases and will require changes to your code - appologies for any inconvenience.
+
+IMPORTANT CHANGES:
+
+The .lib/.so file has been renamed to 'SpectrometerDriver.lib'
+
+The include header has been renamed from 'USBSpectrometerDLL.h' to 'SpectrometerDriver.h' and is now located in the 'SpectrometerDriver' folder
+
+Most functions now return a full error code rather than a simple bool. Successfull calls return ERROR_OK, failed calls return an appropriate error code. ERROR_OK is now 0 with an error being anything non 0 (original behaviour returned 1 on success). 
+The following functions are affected:
+	* kr_Initialise
+	* kr_GetAcquiredData
+	* kr_BeginDataAcquisition
+	* kr_BeginDataAcquisitionEx
+	* kr_StopDataAcquisition
+	* kr_GetDeviceName
+	* kr_GetDeviceManufacturer
+	* kr_GetDeviceSerial
+	* kr_GetDeviceVendorID
+	* kr_GetDeviceProductID
+	* kr_SendInt8ConfigurationCommand
+	* kr_SendInt16ConfigurationCommand
+
+int GetDeviceVendorID(unsigned int deviceID, int *pVendorIDOut) - Now returns the error code within the function call to be consistent with other functions. An additional parameter is now required.
+
+int GetDeviceProductID(unsigned int deviceID, int *pProductIDOut) - Now returns the error code within the function call to be consistent with other functions. An additional parameter is now required.
+
+kr_BeginAcquisition - No longer clears the stored data when a new acquisition begins. This allows it to be used to resume a previous acquisition. The function kr_ClearAcquiredData() has been added to clear the data before a new acquisition is started. Old behaviour can be reproduced by calling kr_ClearAcquiredData before kr_BeginAcquisition.
+
+kr_GetDeviceName - Now returns the error code within the function call to be consistent with other functions. An additional parameter is now passed in to receive the length of the string returned 
+
+kr_GetDeviceManufacturer - Now returns the error code within the function call to be consistent with other functions. An additional parameter is now passed in to receive the length of the string returned
+
+kr_GetDeviceSerial - Now returns the error code within the function call to be consistent with other functions. An additional parameter is now passed in to receive the length of the string returned
+
+kr_SetDataReceivedCallback - Before this release the callback method would be called in a seperate thread from the main application but all callbacks occured within the same callback thread. This new release now creates a seperate callback thread per device which means that the callback method can be called from multiple threads. Please make sure your callback method is fully thread safe to accomadate this. 
+
+kr_Initialise - It is now possible to enumerate devices immediately after calling kr_Initialise. If a device changed callback has been set prior to calling kr_Initialise and devices are attached then the callback will be raised immediately (before this function returns).
+
+kr_DeviceChanged - Now includes the id of the device that changed including a parameter that determines if the device was added or removed.
+
+NEW FEATURES:
+
+kr_ClearAcquiredData - Clears the stored data for a detector including counts, real time and live time. Can be called at any time.
+
+A timestamp for data is now returned in the data received callback method

@@ -1,0 +1,12 @@
+/home/kobepp/MCAs/kromek/CMakeFiles/edit_cache.dir
+/home/kobepp/MCAs/kromek/CMakeFiles/rebuild_cache.dir
+/home/kobepp/MCAs/kromek/KromekDriver/CMakeFiles/KromekDriver.dir
+/home/kobepp/MCAs/kromek/KromekDriver/CMakeFiles/edit_cache.dir
+/home/kobepp/MCAs/kromek/KromekDriver/CMakeFiles/rebuild_cache.dir
+/home/kobepp/MCAs/kromek/SpectrometerDriver/CMakeFiles/SpectrometerDriverStatic.dir
+/home/kobepp/MCAs/kromek/SpectrometerDriver/CMakeFiles/SpectrometerDriver.dir
+/home/kobepp/MCAs/kromek/SpectrometerDriver/CMakeFiles/edit_cache.dir
+/home/kobepp/MCAs/kromek/SpectrometerDriver/CMakeFiles/rebuild_cache.dir
+/home/kobepp/MCAs/kromek/K102/CMakeFiles/K102.dir
+/home/kobepp/MCAs/kromek/K102/CMakeFiles/edit_cache.dir
+/home/kobepp/MCAs/kromek/K102/CMakeFiles/rebuild_cache.dir
