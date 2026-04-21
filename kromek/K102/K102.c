@@ -7,7 +7,8 @@
 //#define HEADER_SIZE 12
 //#define FOOTER_SIZE 70
 #define LIVETIME_DEFAULT 60
-#define THRESHOLD_DEFAULT 32
+#define THRESHOLD_DEFAULT 5
+#define POLARITY_DEFAULT 0
 #define FILENAME_DEFAULT "../tmp.mca"
 
 
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
   int det_index=0;
   int SN;
   int status=0;
-  int threshold;
+  int threshold,polarity;
   int livetime,realtime;//in sec
   char filename_out[32];
   double livetime_taken=0;
@@ -70,15 +71,21 @@ int main(int argc, char *argv[])
     //fprintf (stderr," DAQ time to run: %d sec.",livetime);
   }
   if(argc>2){
-    threshold=atof(argv[2]);
+    threshold=atoi(argv[2])&0xffff;
   }
   else threshold=THRESHOLD_DEFAULT;
   if(argc>3){
-    sprintf(filename_out,"%s",argv[3]);
+    polarity=atoi(argv[3]);
+  }
+  else polarity=POLARITY_DEFAULT;
+
+  if(argc>4){
+    sprintf(filename_out,"%s",argv[4]);
   }
   else sprintf(filename_out,"%s",FILENAME_DEFAULT);
   //fprintf(stderr,"output file:%s",filename_out);
-  //fprintf(stderr,"threshold:%d",threshold);
+  fprintf(stderr,"polarity: %d, ",polarity);    
+  fprintf(stderr,"threshold: %d, ",threshold);
     
   kr_Initialise(NULL, NULL);
   //device scan
@@ -98,7 +105,7 @@ int main(int argc, char *argv[])
   for(det_index=0;det_index<num_of_detectors;det_index++){
     kr_GetDeviceName(detectorID[det_index], nameBuffer, nameLength, &nameLength);
     kr_GetDeviceSerial(detectorID[det_index], SNBuffer, SNLength, &SNLength);
-    //fprintf (stderr," Detector properties (index=%d): ID %u, Name %s, SN %s %d\n", det_index,detectorID[det_index], nameBuffer,SNBuffer,SNLength);
+    fprintf (stderr," Detector properties (index=%d): ID %u, Name %s, SN %s %d\n", det_index,detectorID[det_index], nameBuffer,SNBuffer,SNLength);
   }
   
   det_index=0;
@@ -107,13 +114,13 @@ int main(int argc, char *argv[])
   }
   kr_ClearAcquiredData(detectorID[det_index]);
   //fprintf(stderr," Data cleared.\n");
-  status=kr_IsAcquiringData(detectorID[det_index]);
+  //status=kr_IsAcquiringData(detectorID[det_index]);
   //fprintf(stderr," status: %d\n",status);
 
   //kr_SendInt16ConfigurationCommand(detectorID[det_index], HIDREPORTNUMBER_SETLLD, 32);
   kr_SendInt16ConfigurationCommand(detectorID[det_index], HIDREPORTNUMBER_SETLLD, threshold);
-
-
+  kr_SendInt16ConfigurationCommand(detectorID[det_index], HIDREPORTNUMBER_SETPOLARITY, 0x1&polarity);//does not work.
+  //sleep(1);
   kr_BeginDataAcquisition(detectorID[det_index], 0, 0);
   //fprintf(stderr,"DAQ started...\n");
   while(1){

@@ -15,6 +15,7 @@ detector=['','','']
 MCAchannel=[0,0,0]
 threshold=[0,0,0]
 dynamicrange=[0,0,0]
+polarity=[1,1,1]
 
 ROI=[[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]]]
 SN=[0,0,0]
@@ -63,6 +64,7 @@ def readConfig(filename):
                 MCA_type=d['MCA'][MCAid]['MCA_type']
                 SN[ID]=d['MCA'][MCAid]['SN']
                 threshold[ID]=d['MCA'][MCAid]['threshold']
+                polarity[ID]=d['MCA'][MCAid]['polarity']
                 MCAchannel[ID]=d['MCA'][MCAid]['MCAchannel']
                 dynamicrange[ID]=d['MCA'][MCAid]['dynamicrange']
                 ROI[ID][0][0]=d['MCA'][MCAid]['ROI0_min']
@@ -78,6 +80,7 @@ def readConfig(filename):
                 print("  detector:",detector[ID],end="")
                 print(", Serial Number:",SN[ID])
                 print("  threshold:", threshold[ID],end="")
+                print("  polarity:", polarity[ID],end="")
                 print(", MCA channel:", MCAchannel[ID],end="")                
                 print(", dynamic range:",dynamicrange[ID])                 
                 print("  ROIs:",end="")
@@ -106,7 +109,9 @@ def K102():
     tmpfile="../"+args.t
 
     filename=['','']
-    th=(int)(MCAchannel[0]*threshold[0]/100)
+    #th=(int)(MCAchannel[0]*threshold[0]/100)
+    th=(int)(threshold[0])
+    pol=polarity[0]
 
     sys.stdout.write('Preset time: '+str(presettime)+' \n')
     #sys.stdout.write('taking data.\tpress "s" to stop after this file.\t Press "q" to quit.\n')
@@ -119,15 +124,25 @@ def K102():
         #if quit_flag:
             #sys.stdout.write("q command was issued. Quitting the DAQ.")
             #sys.stdout.flush()
-            #break    
-        cmd=exe+" "+str(presettime)+" "+str(th)+" "+tmpfile
+            #break
+        cmd="unlink "+tmpfile
+        cp=subprocess.run(cmd, shell=True)
+        thisfile=" K102_"+str(fileID)+".mca"
+        cmd="touch "+thisfile
+        cp=subprocess.run(cmd, shell=True)
+        path=os.getcwd()+"/"+thisfile
+        path=path.replace(' ','')
+        cmd="ln -s "+path+" "+tmpfile
         #print(cmd)
+        subprocess.run(cmd, shell=True)
+        cmd=exe+" "+str(presettime)+" "+str(th)+" "+str(pol)+" "+thisfile
+        print(cmd)
         cp=subprocess.run(cmd, shell=True)
         runend_flag=cp.returncode;
         print("runend_flag:"+str(stop_flag))        
         if(runend_flag==0):
-            cmd="cp "+tmpfile+" K102_"+str(fileID)+".mca"
-            subprocess.run(cmd, shell=True)  
+            #cmd="cp "+tmpfile+" K102_"+str(fileID)+".mca"
+            #subprocess.run(cmd, shell=True)  
             fileID=fileID+1
             #return(1)
             #else:
