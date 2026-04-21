@@ -60,6 +60,14 @@ def kill_specmon():
                     #print(f"PID: {proc['pid']}, Name: {proc['name']}, Name: {proc['cmdline']}")
                     os.kill(proc['pid'],signal.SIGKILL)
 
+def copy_configfile(config_filename):
+    # copy config file        
+    if (not os.path.exists(config_filename)):
+        print(config_filename+" does not exist.")
+        cmd="cp "+MCAConfigs+CONFIG+" "+config_filename
+        print(cmd)
+        subprocess.run(cmd, shell=True)
+    
 
 def make_new_period() -> str:
     p = 0
@@ -125,14 +133,7 @@ def run_daq(args):
             
     print("preset time for one file: "+str(presettime)+" sec.")
     print("number of files per period: "+str(num_file_per_period))
-    
-    # copy config file        
-    if (not os.path.exists(config_filename)):
-        print(config_filename+" does not exist.")
-        cmd="cp "+MCAConfigs+CONFIG+" "+config_filename
-        print(cmd)
-        subprocess.run(cmd, shell=True)
-    
+    copy_configfile(config_filename)
     run=1
     while(stop_flag==False):    
         #if quit_fla:
@@ -179,8 +180,10 @@ def main():
     args = parser.parse_args()
 
     config_filename = args.c
+    copy_configfile(config_filename)
     readConfig(config_filename)
-    cmd='mv -f '+TMP_FILE+' '+TMP_FILE+'.org'
+    #cmd='mv -f '+TMP_FILE+' '+TMP_FILE+'.org'
+    cmd='unlink '+TMP_FILE
     subprocess.run(cmd, shell=True)
     cmd='xterm -e root \''+SPECMONMACRO+'("'+TMP_FILE+'")\''
     p_spec_monitor=subprocess.Popen(cmd, shell=True)
