@@ -3,6 +3,17 @@
 
 python driver for AMPTEK MCA8000D and KROMEK K102 DAQ
 original driver: https://github.com/HenningFo/mca8000d, https://github.com/rustam-lantern/LanternSpectrometer　
+## install
+### kromek
+
+$ sudo apt install libudev-dev
+$ cd MCAs kromek
+$ mkdir build
+$ cd build
+$ cmake ../
+$ make
+
+
 ## データ取得
 ### $ runMCA.py　　
 最新のper* を作成してそこにデータを取得
