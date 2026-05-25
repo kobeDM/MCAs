@@ -152,7 +152,7 @@ def run_daq(args):
             cmd=readMCA8000D+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
         elif (MCA_type == "K102"):
             cmd=readK102+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
-        #print(cmd)
+        print(cmd)
         cp=subprocess.run(cmd, shell=True)
         stop_flag=cp.returncode;
         #printf("stop_flag:"+stop_flag)

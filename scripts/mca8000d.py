@@ -755,7 +755,9 @@ def mca8000d():
                 if(int(status1.RealTime/1000)%10==0):
                     print(" file:",fileID,"/",num_file_per_period,end="")
                     print(" time:",str(int(status1.RealTime/1000)),"/",str(presettime),end="\r")
-
+                
+                spec1=dev1.spectrum(True, False) #keep the running data
+                saveSpectrum(tmpfile, spec1[0],status1,starttime,0)
         if active[0]:
             status0=dev0.reqStatus()
             dev0.disable_MCA_MCS()
