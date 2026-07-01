@@ -1,0 +1,118 @@
+2026-07-01 14:01:31,788 - ftdi - INFO - ... No active connection. Nothing to close.
+2026-07-01 14:01:31,788 - ftdi - INFO - ... Initialization of the class FTDI completed.
+2026-07-01 14:01:31,788 - ftdi - INFO - ... Successfully got VID and PID. VID: 0x15d6, PID: 0x0001
+2026-07-01 14:01:31,788 - ftdi - INFO - ... Successfully set VID and PID. VID: 0x1ca6, PID: 0x0000
+2026-07-01 14:01:31,788 - ftdi - INFO - ... Initialization of the class APG7300D completed.
+2026-07-01 14:01:31,788 - ftdi - INFO - ... No active connection. Nothing to close.
+2026-07-01 14:01:31,788 - ftdi - INFO - ... Initialization of the class FTDI completed.
+2026-07-01 14:01:32,300 - ftdi - INFO - ... Device index: 0
+2026-07-01 14:01:32,300 - ftdi - INFO - ...... Flags: 2, Type: 6, ID: 480641024, LocID: 13649
+2026-07-01 14:01:32,300 - ftdi - INFO - ...... SerialNumber: APG7300AAv(p
+2026-07-01 14:01:32,301 - ftdi - INFO - ...... Description: USB-MCA A̼`ͼ˼̼ ʼt(p
+2026-07-01 14:01:32,301 - ftdi - INFO - ...... Handle: None
+2026-07-01 14:01:32,301 - ftdi - INFO - ... Device index: 1
+2026-07-01 14:01:32,301 - ftdi - INFO - ...... Flags: 2, Type: 6, ID: 480641024, LocID: 13650
+2026-07-01 14:01:32,301 - ftdi - INFO - ...... SerialNumber: APG7300ABv(p
+2026-07-01 14:01:32,301 - ftdi - INFO - ...... Description: USB-MCA B̼`ͼ˼̼ ʼt(p
+2026-07-01 14:01:32,301 - ftdi - INFO - ...... Handle: None
+2026-07-01 14:01:32,309 - ftdi - INFO - ... Successfully opened the device by serial number
+2026-07-01 14:01:32,813 - ftdi - INFO - ... Initialization of the device APG7300D completed.
+2026-07-01 14:01:32,814 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'PDSW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,814 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'PDSW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,815 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'ADGW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,816 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'ADGW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,816 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'THRW\x00\x00\x00('), Data size: 8
+2026-07-01 14:01:32,818 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'THRW\x00\x00\x00('), Data size: 8
+2026-07-01 14:01:32,818 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'LLDW\x00\x00\x00('), Data size: 8
+2026-07-01 14:01:32,820 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'LLDW\x00\x00\x00('), Data size: 8
+2026-07-01 14:01:32,820 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'ULDW\x00\x00?\xff'), Data size: 8
+2026-07-01 14:01:32,822 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'ULDW\x00\x00?\xff'), Data size: 8
+2026-07-01 14:01:32,822 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'OFSW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,824 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'OFSW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,824 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'AQEW\x00\x00\x00\x01'), Data size: 8
+2026-07-01 14:01:32,826 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'AQEW\x00\x00\x00\x01'), Data size: 8
+2026-07-01 14:01:32,826 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'CLRW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,828 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'CLRW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,828 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'MODW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,830 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'MODW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,830 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'MMDW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,832 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'MMDW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,832 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'MT0W\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,834 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'MT0W\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:32,834 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'MT1W\x07sY@'), Data size: 8
+2026-07-01 14:01:32,836 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'MT1W\x07sY@'), Data size: 8
+2026-07-01 14:01:32,836 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'AQSW\x00\x00\x00\x01'), Data size: 8
+2026-07-01 14:01:32,838 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'AQSW\x00\x00\x00\x01'), Data size: 8
+2026-07-01 14:01:32,838 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:32,838 - ftdi - INFO - ... Read status
+2026-07-01 14:01:32,839 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:33,340 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:33,341 - ftdi - INFO - ... Read status
+2026-07-01 14:01:33,341 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:33,842 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:33,843 - ftdi - INFO - ... Read status
+2026-07-01 14:01:33,843 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:34,344 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:34,345 - ftdi - INFO - ... Read status
+2026-07-01 14:01:34,345 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:34,846 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:34,847 - ftdi - INFO - ... Read status
+2026-07-01 14:01:34,847 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:35,349 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:35,349 - ftdi - INFO - ... Read status
+2026-07-01 14:01:35,350 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:35,852 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:35,853 - ftdi - INFO - ... Read status
+2026-07-01 14:01:35,853 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:36,355 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:36,355 - ftdi - INFO - ... Read status
+2026-07-01 14:01:36,355 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:36,857 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:36,857 - ftdi - INFO - ... Read status
+2026-07-01 14:01:36,858 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:37,359 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:37,359 - ftdi - INFO - ... Read status
+2026-07-01 14:01:37,360 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:37,860 - ftdi - INFO - ... Clear status
+2026-07-01 14:01:37,861 - ftdi - INFO - ... Read status
+2026-07-01 14:01:37,861 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'STUW\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,363 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'AQEW\x00\x00\x00\x01'), Data size: 8
+2026-07-01 14:01:38,364 - ftdi - INFO - ... [Read command] Is success: True, Command: bytearray(b'AQEW\x00\x00\x00\x01'), Data size: 8
+2026-07-01 14:01:38,364 - ftdi - INFO - ... Read histogram
+2026-07-01 14:01:38,365 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI00\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,369 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI01\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,373 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI02\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,379 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI03\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,384 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI04\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,389 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI05\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,396 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI06\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,402 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI07\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,407 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI08\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,413 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI09\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,418 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI0A\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,423 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI0B\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,428 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI0C\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,433 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI0D\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,438 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI0E\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,445 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI0F\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,451 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI10\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,457 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI11\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,463 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI12\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,469 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI13\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,475 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI14\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,483 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI15\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,490 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI16\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,497 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI17\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,504 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI18\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,511 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI19\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,520 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI1A\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,528 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI1B\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,536 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI1C\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,544 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI1D\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,552 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI1E\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,562 - ftdi - INFO - ... [Write command] Is success: True, Command: bytearray(b'HI1F\x00\x00\x00\x00'), Data size: 8
+2026-07-01 14:01:38,571 - ftdi - INFO - ... Successfully read histogram from the device APG7300D.
+2026-07-01 14:01:38,582 - ftdi - INFO - ... Successfully set VID and PID. VID: 0x15d6, PID: 0x0001
+2026-07-01 14:01:38,582 - ftdi - INFO - ... APG7300D instance has been deleted.
+2026-07-01 14:01:38,585 - ftdi - INFO - ... Successfully closed the connection
+2026-07-01 14:01:38,585 - ftdi - INFO - ... FTDI instance has been deleted.
