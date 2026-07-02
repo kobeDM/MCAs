@@ -1,7 +1,7 @@
 
 # MCAs
 
-python driver for AMPTEK MCA8000D and KROMEK K102 DAQ
+python driver for AMPTEK MCA8000D, technoTP APG7300D，and KROMEK K102 DAQ
 original driver: https://github.com/HenningFo/mca8000d, https://github.com/rustam-lantern/LanternSpectrometer　
 ## install
 ### kromek
