@@ -1,0 +1,92 @@
+
+import json
+
+class COMMON():    
+    def readConfig(filename):
+        global SN,detector,threshold,detector,MCAchannel,dynamicrange,ROI,host,port,database
+        print("Reading config file ",filename)
+        ID=0
+        with open(filename) as f:
+            d = json.load(f)
+            host=d['INFLUXDB']['host']
+            port=d['INFLUXDB']['port']
+            database=d['INFLUXDB']['database']
+            for MCAid in d['MCA']:
+                active[ID]=d['MCA'][MCAid]['active']
+                print(" MCA ID:",MCAid,"(active:",active[ID],")")
+                if (active[ID]):
+                    detector[ID]=d['MCA'][MCAid]['detector']
+                    SN[ID]=d['MCA'][MCAid]['SN']
+                    threshold[ID]=d['MCA'][MCAid]['threshold']
+                    MCAchannel[ID]=d['MCA'][MCAid]['MCAchannel']
+                    dynamicrange[ID]=d['MCA'][MCAid]['dynamicrange']
+                    ROI[ID][0][0]=d['MCA'][MCAid]['ROI0_min']
+                    ROI[ID][0][1]=d['MCA'][MCAid]['ROI0_max']
+                    ROI[ID][1][0]=d['MCA'][MCAid]['ROI1_min']
+                    ROI[ID][1][1]=d['MCA'][MCAid]['ROI1_max']
+                    ROI[ID][2][0]=d['MCA'][MCAid]['ROI2_min']
+                    ROI[ID][2][1]=d['MCA'][MCAid]['ROI2_max']
+                    ROI[ID][3][0]=d['MCA'][MCAid]['ROI3_min']
+                    ROI[ID][3][1]=d['MCA'][MCAid]['ROI3_max']
+                    ROI[ID][4][0]=d['MCA'][MCAid]['ROI4_min']
+                    ROI[ID][4][1]=d['MCA'][MCAid]['ROI4_max']
+                    print("  detector:",detector[ID],end="")
+                    print(", Serial Number:",SN[ID])
+                    print("  threshold:", threshold[ID],end="")
+                    print(", MCA channel:", MCAchannel[ID],end="")                
+                    print(", dynamic range:",dynamicrange[ID])                 
+                    print("  ROIs:",end="")
+                    for ROIid in range(5):
+                        print("(",ROI[ID][ROIid][0],":",ROI[ID][ROIid][1],"), ",end="")
+                ID=ID+1
+        for i in range (2):
+            rate_filename[i]='SN'+str(SN[i])+'_rate.dat' 
+
+    def saveSpectrum(filename, spectrum,status,starttime,i,presettime):
+        HEADER_SIZE=12
+        FOOTTER_SIZE=70
+        print("saving spectrum")
+        print(" file name:",filename)
+
+        """write spectrum to file, one channel per line"""
+        fh = open(filename, "w")
+        fh.write("<<PMCA SPECTRUM>>\n")
+        fh.write("TAG - live_data\n")    
+        fh.write("DESCRIPTION - \n")    
+        fh.write("GAIN - 5\n")
+        #s="THRESHOLD - "+str(threshold[i])+"\n"    
+        fh.write("THRESHOLD - \n")
+        fh.write("LIVE_MODE - 0\n")    
+        s="PRESET_TIME - "+str(presettime)+"\n"    
+        fh.write(s)
+        #s="LIVE_TIME - "+str(status.AccumulationTime/1000.)+"\n"
+        fh.write("LIVE_TIME - \n")
+        #s="REAL_TIME - "+str(status.RealTime/1000.)+"\n"    
+        fh.write("REAL_TIME  - \n")
+        s="START_TIME - "+str(starttime)+"\n"    
+        fh.write(s)
+        #s="SERIAL_NUMBER - "+str(SN[i])+"\n"    
+        fh.write("SERIAL_NUMBER - \n")
+        fh.write("<<DATA>>\n")
+        for chan in spectrum:
+            fh.write("{}\n".format( str(chan)))
+        fh.write("0\n")
+        fh.write("<<END>>\n")
+        fh.write("<<MCA CONFIGURATION>>\n")
+        #s="MCAC="+str(MCAchannel[i])+";    MCA/MCS Channels\n"    
+        fh.write("MCAC= \n")
+        #s="GAIN="+str(dynamicrange[i])+";    Total Gain (Analog * Fine)\n"
+        fh.write("GAIN= \n")
+        fh.write("GAIA=1;    Analog Gain Index\n")
+        for line in range (FOOTTER_SIZE-21):
+            fh.write("FOOTTER\n")
+        fh.write("<<DP5 CONFIGURATION END>>\n")
+        fh.write("<<DPP STATUS>>\n")
+        #s="Accumulation Time: "+str(status.AccumulationTime/1000.)+"\n"
+        fh.write("Accumulation Time: ")
+        #s="Real Time:  "+str(status.RealTime/1000.)+"\n"    
+        fh.write("Real Time:  \n")
+        for line in range (11):
+            fh.write("FOOTTER\n")
+        fh.write("<<DPP STATUS END>>\n")
+        fh.close()

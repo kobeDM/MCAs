@@ -160,16 +160,19 @@ class APG7300D(ftdi.FTDI):
     #   Display the status of the device APG7300D
     # ====================================================================== 
     def DisplayStatus(self):
-        print("live time :    %.2f (sec)" % (
-			float(self.mStatus["LVT1",]) * SEC_PER_DIGIT))	 #CH1
+        #print("live time :    %.2f (sec)" % (
+	#		float(self.mStatus["LVT1",]) * SEC_PER_DIGIT))	 #CH1
 
-        print("dead time :    %.2f (sec)" % (
-			float(self.mStatus["DDT1",]) * SEC_PER_DIGIT))	 #CH1
+        #print("dead time :    %.2f (sec)" % (
+	#float(self.mStatus["DDT1",]) * SEC_PER_DIGIT))	 #CH1
         
-        print ("throughput count rate:  %d" % (
-			self.mStatus["TCR1",]))	#CH1
-        print ("throughput total count: %d" % (
-			self.mStatus["TCT1",]))	#CH1
+        #print ("throughput count rate:  %d" % (
+	#		self.mStatus["TCR1",]))	#CH1
+        #print ("throughput total count: %d" % (
+	#		self.mStatus["TCT1",]))	#CH1
+        print ("%d events aquired. " % (
+			self.mStatus["TCR1",]),end=" ")
+        print ("(%d cps, %.2f sec dead.)" % (self.mStatus["TCR1",],float(self.mStatus["DDT1",]) * SEC_PER_DIGIT),end="\r")
         return
 
     # ======================================================================
