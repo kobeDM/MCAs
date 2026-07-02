@@ -13,12 +13,18 @@ class CONFIG:
         self.ratefilename = ""
         self.ROI = [[0,0],[0,0],[0,0],[0,0],[0,0]]
 
+  
+class STATUS:
+    def __init__(self):
+        self.presettime=0
+        self.realtime=0
+        self.livetime=0
+        self.deadtime=0
+        self.startime=0
+        self.stoptime=0
+        self.evnum=0
 
-    #detector=[]
-    #for i in range(maxMCAs):
-    #    detector.append("")
-
-    
+        
 class COMMON():
     def readConfig(filename):
         maxMCAs=8
@@ -44,7 +50,6 @@ class COMMON():
             database=d['INFLUXDB']['database']
             for MCAid in d['MCA']:
                 configs[ID].active=d['MCA'][MCAid]['active']
-                print(" MCA ID:",MCAid,"(active:", configs[ID].active,")")
                 if (configs[ID].active):
                     configs[ID].detector=d['MCA'][MCAid]['detector']
                     configs[ID].SN=d['MCA'][MCAid]['SN']
@@ -63,8 +68,11 @@ class COMMON():
                     configs[ID].ROI[3][1]=d['MCA'][MCAid]['ROI3_max']
                     configs[ID].ROI[4][0]=d['MCA'][MCAid]['ROI4_min']
                     configs[ID].ROI[4][1]=d['MCA'][MCAid]['ROI4_max']
+                    print(" MCA ID:",MCAid,"(active:", configs[ID].active,")")
                     for ROIid in range(5):
-                        print("(",configs[ID].ROI[ROIid][0],":",configs[ID].ROI[ROIid][1],"), ",end="")
+                        print("(",configs[ID].ROI[ROIid][0],":",configs[ID].ROI[ROIid][1],")",end="")
+                        if(ROIid < 4):
+                            print(", ",end="")
                     print("")
                 #for i in range (2):
                  #   rate_filename[i]='SN'+str(configs[ID].SN[i])+'_rate.dat' 
@@ -86,7 +94,8 @@ class COMMON():
             
         print("")
         
-    def saveSpectrum(filename, spectrum,status,starttime,presettime):
+    #def saveSpectrum(filename, spectrum,status,starttime,presettime):
+    def saveSpectrum(filename, spectrum,config,status):
         HEADER_SIZE=12
         FOOTTER_SIZE=70
         #print("saving spectrum")
@@ -97,19 +106,13 @@ class COMMON():
         fh.write("<<PMCA SPECTRUM>>\n")
         fh.write("TAG - live_data\n")    
         fh.write("DESCRIPTION - \n")    
-        fh.write("GAIN - 5\n")
-        #s="THRESHOLD - "+str(threshold[i])+"\n"    
-        fh.write("THRESHOLD - \n")
+        fh.write("GAIN - \n")
+        fh.write("THRESHOLD - "+str(config.threshold)+"%\n")
         fh.write("LIVE_MODE - 0\n")    
-        s="PRESET_TIME - "+str(presettime)+"\n"    
-        fh.write(s)
-        #s="LIVE_TIME - "+str(status.AccumulationTime/1000.)+"\n"
-        fh.write("LIVE_TIME - \n")
-        #s="REAL_TIME - "+str(status.RealTime/1000.)+"\n"    
-        fh.write("REAL_TIME  - \n")
-        s="START_TIME - "+str(starttime)+"\n"    
-        fh.write(s)
-        #s="SERIAL_NUMBER - "+str(SN[i])+"\n"    
+        fh.write("PRESET_TIME - "+str(status.presettime)+"\n")
+        fh.write("LIVE_TIME  - {:.2f}\n".format(status.livetime))
+        fh.write("REAL_TIME  - {:.2f}\n".format(status.realtime))
+        fh.write("START_TIME - "+str(status.starttime)+"\n")
         fh.write("SERIAL_NUMBER - \n")
         fh.write("<<DATA>>\n")
         for chan in spectrum:
@@ -117,20 +120,16 @@ class COMMON():
         fh.write("0\n")
         fh.write("<<END>>\n")
         fh.write("<<MCA CONFIGURATION>>\n")
-        #s="MCAC="+str(MCAchannel[i])+";    MCA/MCS Channels\n"    
-        fh.write("MCAC= \n")
-        #s="GAIN="+str(dynamicrange[i])+";    Total Gain (Analog * Fine)\n"
+        fh.write("MCAC= "+str(config.MCAchannel)+"\n")
         fh.write("GAIN= \n")
         fh.write("GAIA=1;    Analog Gain Index\n")
         for line in range (FOOTTER_SIZE-21):
             fh.write("FOOTTER\n")
-        fh.write("<<DP5 CONFIGURATION END>>\n")
-        fh.write("<<DPP STATUS>>\n")
-        #s="Accumulation Time: "+str(status.AccumulationTime/1000.)+"\n"
-        fh.write("Accumulation Time: ")
-        #s="Real Time:  "+str(status.RealTime/1000.)+"\n"    
-        fh.write("Real Time:  \n")
+        fh.write("<<MCA CONFIGURATION END>>\n")
+        fh.write("<<MCA STATUS>>\n")
+        fh.write("Live Time:  "+str(status.livetime)+"\n")    
+        fh.write("Real Time:  "+str(status.realtime)+"\n")    
         for line in range (11):
             fh.write("FOOTTER\n")
-        fh.write("<<DPP STATUS END>>\n")
+        fh.write("<<MCA STATUS END>>\n")
         fh.close()

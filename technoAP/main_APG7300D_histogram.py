@@ -21,6 +21,8 @@ import termios
 
 DIGIT_PER_SEC = 25000000.0
 SEC_PER_DIGIT = 1.0 / DIGIT_PER_SEC
+prescale=1
+VERBOSE=0
 
 maxMCAs=8
 CONFIG = "MCA_config.json"
@@ -51,6 +53,19 @@ def key_monitor():
             sys.stdout.write("s command was issued. Stopping the DAQ at the end of this file.")
             break
 
+def make_links(thisfile,tmpfile):
+    if os.path.isfile(tmpfile):
+        cmd="unlink "+tmpfile
+        cp=subprocess.run(cmd, shell=True)
+    cmd="touch "+thisfile
+    cp=subprocess.run(cmd, shell=True)
+    path=os.getcwd()+"/"+thisfile
+    path=path.replace(' ','')
+    cmd="ln -s "+path+" "+tmpfile
+    #print(cmd)
+    subprocess.run(cmd, shell=True)
+
+    
 
 # ======================================================================
 #   Main program
@@ -79,12 +94,16 @@ def main_APG7300D_histgram():
         mcacommon=common.COMMON
         print("\n###### read configure file ######")
         configs=mcacommon.readConfig(CONFIG)
+        #status=mcacommon.initStatus()
+        status=common.STATUS
         ID=0
+        status.presettime =presettime
         for i in range(maxMCAs):
             if configs[i].MCA_type == "APG73000D":
-                print("APG73000D was found. (ID=",configs[i].ID,")")
+                #print("APG73000D was found. (ID=",configs[i].ID,")")
                 ID=configs[i].ID
-        mcacommon.showConfig(configs[ID])
+        if VERBOSE:
+            mcacommon.showConfig(configs[ID])
         serialnum = (configs[ID].SN).encode("utf-8")
         usbmca = apg7300d.APG7300D()     # Create an instance of class APG7300D and run its initialization
         usbftdi = ftdi.FTDI()                                               # create an instance of class FTDI and run its initialization
@@ -99,49 +118,49 @@ def main_APG7300D_histgram():
         print("\n###### data acquisiion started ######")
         sys.stdout.write('### press "s" to stop after this file.\t Press "q" to quit.###\n')
         while(fileID < num_file_per_period):
-            starttime = time.time()
-            #if isSuccess == True:
-            #isSuccess = usbmca.InitializeDevice(usbftdi)
+            status.starttime = time.time()
             thisfile=configs[ID].SN+'_'+str(fileID)+'.mca'
-            print(" file:",fileID,"/",num_file_per_period,"filename:",thisfile,end="\n")
-            cmd="unlink "+tmpfile
-            cp=subprocess.run(cmd, shell=True)
-            cmd="touch "+thisfile
-            cp=subprocess.run(cmd, shell=True)
-            path=os.getcwd()+"/"+thisfile
-            path=path.replace(' ','')
-            cmd="ln -s "+path+" "+tmpfile
-            #print(cmd)
-            subprocess.run(cmd, shell=True)
-
-            start_acquisition(usbmca, usbftdi, presettime,configs[ID])
-            elapsed_sec = -0.001 
-            while presettime >= elapsed_sec:
+            #print(" file:",fileID,"/",num_file_per_period,"filename:",thisfile,end="\n")
+            make_links(thisfile,tmpfile)
+            start_acquisition(usbmca, usbftdi, status.presettime,configs[ID])
+            status.realtime = -0.001
+            while status.presettime >= status.realtime:
                 if quit_flag:
-                    #sys.stdout.write("q command was issued. Quitting the DAQ.")
-                    sys.stdout.flush()
                     break
                 usbmca.ReadStatus(usbftdi)              # Get device status
-                elapsed_sec  = float(usbmca.mStatus["RLT",]) * SEC_PER_DIGIT
-                spec=read_data(usbmca, usbftdi, presettime,configs[ID])
-                status=0
-                mcacommon.saveSpectrum(thisfile, spec,status,starttime,presettime)  
-                if(int(elapsed_sec)%1==0):
-                    #print("\n##### elapsed_sec/acq_sec (sec): %.2f/%.2f #####" % (elapsed_sec, acq_sec))            
-                    print(" time:",str(int(elapsed_sec)),"/",str(presettime),end="\r")
+                status.realtime= float(usbmca.mStatus["RLT",]) * SEC_PER_DIGIT
+                status.livetime= float(usbmca.mStatus["LVT1",]) * SEC_PER_DIGIT
+                spec=read_data(usbmca, usbftdi, status.presettime,configs[ID])
+                #status=0
+
+                #mcacommon.saveSpectrum(thisfile, spec,status,starttime,presettime,elapsed_sec)  
+                mcacommon.saveSpectrum(thisfile, spec,configs[ID],status)  
+                if(int(status.realtime)%prescale==0):
+                    #print("\n##### elapsed_sec/acq_sec (sec): %.2f/%.2f #####" % (elapsed_sec, acq_sec))
+                    print(" file:",fileID,"/",num_file_per_period,"filename:",thisfile,end="\t")
+
+                    print(" time:",str(int(status.realtime)),"/",str(presettime),end="\r")
                     #usbmca.DisplayStatus()                  # Display device status
                 time.sleep(1)		# delay
             
+            status.stoptime = time.time()
             usbmca.WriteReadCommand(usbftdi, "AQEW", 1) # Stop data acquisition: 1 --> execute
             #spec=acquire_data(usbmca, usbftdi, presettime,configs[ID])
             #print("\n###### data acquisition complete ######")
-            spec=read_data(usbmca, usbftdi, presettime,configs[ID])
-            status=0
-            mcacommon.saveSpectrum(thisfile, spec,status,starttime,presettime)  
+            spec=read_data(usbmca, usbftdi, status.presettime,configs[ID])
+            #status=0
+            
+            status.realtime  = float(usbmca.mStatus["RLT",]) * SEC_PER_DIGIT
+            status.livetime  = float(usbmca.mStatus["LVT1",]) * SEC_PER_DIGIT
+            status.deadtime  = float(usbmca.mStatus["DDT1",]) * SEC_PER_DIGIT
+            #mcacommon.saveSpectrum(thisfile, spec,status,starttime,presettime,elapsed_sec)
+            mcacommon.saveSpectrum(thisfile, spec,configs[ID],status)  
+                            
             if(quit_flag or stop_flag):
                 return(1)            
             fileID=fileID+1
             #return(0)
+        
     except Exception as e:
         print("An error has occurred: ", e)
 
@@ -188,46 +207,46 @@ def acquire_data(usbmca, usbftdi, acq_sec,config):
     usbmca.WriteReadCommand(usbftdi, "MT0W", (acq_digit >> 32) & 0x0fff)        # Upper 12 bits of measurement time (44 bits in total)
     usbmca.WriteReadCommand(usbftdi, "MT1W", (acq_digit >> 0) & 0x0ffffffff)    # Lower 32 bits of measurement time (44 bits in total)
 
-    elapsed_sec = -0.001                        # Initialize elapsed time
-    usbmca.WriteReadCommand(usbftdi, "AQSW", 1) # Start data acquisition: 1 --> execute
-    while acq_sec >= elapsed_sec:
-        if quit_flag:
+    #elapsed_sec = -0.001                        # Initialize elapsed time
+    #usbmca.WriteReadCommand(usbftdi, "AQSW", 1) # Start data acquisition: 1 --> execute
+    #while acq_sec >= elapsed_sec:
+     #   if quit_flag:
             #sys.stdout.write("q command was issued. Quitting the DAQ.")
-            sys.stdout.flush()
-            break
-        usbmca.ReadStatus(usbftdi)              # Get device status
-        elapsed_sec  = float(usbmca.mStatus["RLT",]) * SEC_PER_DIGIT
-        if(int(elapsed_sec)%1==0):
+      #      sys.stdout.flush()
+       #     break
+       # usbmca.ReadStatus(usbftdi)              # Get device status
+       # elapsed_sec  = float(usbmca.mStatus["RLT",]) * SEC_PER_DIGIT
+       # if(int(elapsed_sec)%1==0):
             #print("\n##### elapsed_sec/acq_sec (sec): %.2f/%.2f #####" % (elapsed_sec, acq_sec))            
-            print(" time:",str(int(elapsed_sec)),"/",str(acq_sec),end="\r")
+            #print(" time:",str(int(elapsed_sec)),"/",str(acq_sec),end="\r")
             #usbmca.DisplayStatus()                  # Display device status
-        time.sleep(1)		# delay
+        #time.sleep(1)		# delay
 
-    usbmca.WriteReadCommand(usbftdi, "AQEW", 1) # Stop data acquisition: 1 --> execute
+#    usbmca.WriteReadCommand(usbftdi, "AQEW", 1) # Stop data acquisition: 1 --> execute
 
 	#-------------------- read histogram --> CSV file --------------------#
-    histdata = []
-    isSuccess, hist0 = usbmca.ReadHistogram(usbftdi, 1)	# read histogram data, 1 --> CH1       
-    histdata.append(hist0)
+    #histdata = []
+    #isSuccess, hist0 = usbmca.ReadHistogram(usbftdi, 1)	# read histogram data, 1 --> CH1       
+    #histdata.append(hist0)
 
-    spectrum = []      
-    MCAmax=pow(2,14-config.MCAchannel)
-    for indx in range(MCAmax):
+    #spectrum = []      
+    #MCAmax=pow(2,14-config.MCAchannel)
+    #for indx in range(MCAmax):
         #if histdata[0][indx] >0:
             #print(indx,"\t",histdata[0][indx])
-        spectrum.append(histdata[0][indx])
-    return spectrum
+     #   spectrum.append(histdata[0][indx])
+    #return spectrum
 
 # ======================================================================
 #   Send configuration command to the device APG7300D
 # ====================================================================== 
 def configure_device(usbmca, usbftdi,config):
-    print("\n###### configure device ######")
+    #print("\n###### configure device ######")
     MCAmax=pow(2,14-config.MCAchannel)
     uldw=MCAmax-1
     th=int(config.threshold*MCAmax/100)
     #th=5
-    print("MCAmax=",MCAmax)
+    print("MCAmax=",MCAmax,end="\t")
     print("threshold=",th)
     usbmca.WriteReadCommand(usbftdi, "PDSW", 0) # Peak detection mode: 0 --> absolute
     #usbmca.WriteReadCommand(usbftdi, "ADGW", 0) # CH1 ADC gain: 0 --> 16384 bins
