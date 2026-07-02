@@ -22,7 +22,10 @@ MCAScripts=MCAdir+"scripts/"
 MCARootMacros=MCAdir+"root_macros/"
 
 readMCA8000D="sudo "+MCAdir+"scripts/mca8000d.py"
+readAPG73000D="sudo "+MCAdir+"technoAP/main_APG7300D_histogram.py"
 readK102=MCAdir+"scripts/K102.py"
+
+
 
 active=[False,False,False]
 MCA_type="MCA8000D"
@@ -136,20 +139,19 @@ def run_daq(args):
     copy_configfile(config_filename)
     run=1
     while(stop_flag==False):    
-        #if quit_fla:
-        #    break
-        #if stop_flag:
-        #    print("s command was issued. stopping the DAQ after this file.")           #     run=0
-        #    break
         new_per = make_new_period()        
         cmd="cp "+config_filename+" "+new_per
         #print(cmd)
         subprocess.run(cmd, shell=True)
         os.chdir(new_per)
-        print("***********",new_per,"***********")
+        print("*****************************")
+        print("***********",new_per,"************")
+        print("*****************************")
         #cmd=readMCA+" -c "+config_filename+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
         if (MCA_type == "MCA8000D"):
             cmd=readMCA8000D+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
+        elif (MCA_type == "APG73000D"):
+            cmd=readAPG73000D+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
         elif (MCA_type == "K102"):
             cmd=readK102+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
         print(cmd)
