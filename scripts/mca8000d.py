@@ -803,6 +803,7 @@ def mca8000d():
     return(0)
     
 if __name__ == '__main__':
+    print(os.getcwd())
     readConfig(CONFIG)
     monitor_thread = threading.Thread(target=key_monitor)
     monitor_thread.daemon = True  

@@ -108,7 +108,7 @@ def main_APG7300D_histgram():
         usbmca = apg7300d.APG7300D()     # Create an instance of class APG7300D and run its initialization
         usbftdi = ftdi.FTDI()                                               # create an instance of class FTDI and run its initialization
         isSuccess, deviceList, deviceCounts = usbftdi.GetDeviceInfoList()   # Display information for all connected devices
-        isSuccess = usbftdi.OpenBySerialNumber(serialnum)
+        isSuccess = usbftdi.OpenBySerialNumber((configs[ID].SN).encode("utf-8"))
         fileID=0
         #filename=tmpfile
         if isSuccess == True:
@@ -137,12 +137,14 @@ def main_APG7300D_histgram():
                 mcacommon.saveSpectrum(thisfile, spec,configs[ID],status)  
                 if(int(status.realtime)%prescale==0):
                     #print("\n##### elapsed_sec/acq_sec (sec): %.2f/%.2f #####" % (elapsed_sec, acq_sec))
-                    print(" file:",fileID,"/",num_file_per_period,"filename:",thisfile,end="\t")
+                    print(" time:",str(int(status.realtime)),"/",str(presettime),end="\t")
+                    print(" file:",fileID,"/",num_file_per_period,"filename:",thisfile,end="\r")
 
-                    print(" time:",str(int(status.realtime)),"/",str(presettime),end="\r")
+  
                     #usbmca.DisplayStatus()                  # Display device status
                 time.sleep(1)		# delay
-            
+
+            print("                                      ",end="\r")
             status.stoptime = time.time()
             usbmca.WriteReadCommand(usbftdi, "AQEW", 1) # Stop data acquisition: 1 --> execute
             #spec=acquire_data(usbmca, usbftdi, presettime,configs[ID])
