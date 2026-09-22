@@ -22,12 +22,16 @@ MCAScripts=MCAdir+"scripts/"
 MCARootMacros=MCAdir+"root_macros/"
 
 readMCA8000D="sudo "+MCAdir+"scripts/mca8000d.py"
-readAPG73000D="sudo "+MCAdir+"technoAP/main_APG7300D_histogram.py"
+readAPG7300D="sudo "+MCAdir+"technoAP/main_APG7300D_histogram.py"
+readAPG7400A="sudo "+MCAdir+"technoAP/main_APG7400A_histogram.py"
 readK102=MCAdir+"scripts/K102.py"
 
 
+maxMCAs=8
+active=[False]*maxMCAs
 
-active=[False,False,False]
+#active=[False,False,False,False]
+#active=[False]*8
 MCA_type="MCA8000D"
 # configs
 CONFIG = "MCA_config.json"
@@ -98,8 +102,8 @@ def print_runsummary(file):
     
 def post_to_influx(file,daemon):
     from influxdb import InfluxDBClient
-    client = InfluxDBClient( host     = "10.37.0.214",port     = "8086",database= "miraclue" )
-    #client = InfluxDBClient( host     = "10.37.0.170",port     = "8086",database= "miraclue" )
+    #client = InfluxDBClient( host     = "10.37.0.214",port     = "8086",database= "miraclue" )
+    client = InfluxDBClient( host     = "10.37.0.170",port     = "8086",database= "miraclue" )
     if(not os.path.isfile(file)):
         cmd="touch "+file
         subprocess.run(cmd, shell=True)
@@ -151,9 +155,12 @@ def run_daq(args):
         if (MCA_type == "MCA8000D"):
             cmd=readMCA8000D+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
         elif (MCA_type == "APG73000D"):
-            cmd=readAPG73000D+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
+            cmd=readAPG7300D+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
+        elif (MCA_type == "APG7400A"):
+            cmd=readAPG7400A+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
         elif (MCA_type == "K102"):
             cmd=readK102+" -c "+config_filename+" -t "+TMP_FILE+" -p "+str(presettime)+" -f "+ str(num_file_per_period)
+        #cmd="xterm -e "+cmd
         print(cmd)
         cp=subprocess.run(cmd, shell=True)
         stop_flag=cp.returncode;
@@ -201,5 +208,9 @@ def main():
     kill_specmon()
     #print("Kill the root process manually.")
 
-main()
+# ======================================================================
+#   Run main program
+# ====================================================================== 
+if __name__ ==  '__main__':
+    main()
 
