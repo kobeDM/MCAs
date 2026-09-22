@@ -98,7 +98,7 @@ def main():
 
     for i in range(maxMCAs):
         if (configs[i].active):
-            datadir=configs[i].SN
+            datadir=str(configs[i].SN)
             os.makedirs(datadir, exist_ok=True)
             os.chdir(datadir)
             print("run MCAID",configs[i].ID," (",configs[i].MCA_type,")")

@@ -32,13 +32,13 @@ FOOTTER_SIZE=70
 CONFIG = "MCA_config.json"
 TMP_FILE = "../tmp.mca"
 
-detector=['','','']
-MCAchannel=[0,0,0]
-threshold=[0,0,0]
-dynamicrange=[0,0,0]
-ROI=[[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]]]
-SN=[0,0,0]
-active=[False,False,False]
+detector=['','','','','']
+MCAchannel=[0,0,0,0,0]
+threshold=[0,0,0,0,0]
+dynamicrange=[0,0,0,0,0]
+ROI=[[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0],[0,0],[0,0]]]
+SN=[0,0,0,0,0]
+active=[False,False,False,False,False]
 
 rate_filename=['','']
 presettime=0
@@ -757,7 +757,7 @@ def mca8000d():
                     print(" time:",str(int(status1.RealTime/1000)),"/",str(presettime),end="\r")
                 
                 spec1=dev1.spectrum(True, False) #keep the running data
-                saveSpectrum(tmpfile, spec1[0],status1,starttime,0)
+                saveSpectrum(tmpfile, spec1[0],status1,starttime,1)
         if active[0]:
             status0=dev0.reqStatus()
             dev0.disable_MCA_MCS()
@@ -813,7 +813,7 @@ if __name__ == '__main__':
         influx_thread0=threading.Thread(target=post_to_influx,args=(rate_filename[0],"he3_mca","daemon"),daemon=True)
         influx_thread0.start()
     if active[1]:
-        influx_thread1=threading.Thread(target=post_to_influx,args=(rate_filename[1],"NaI","daemon"),daemon=True)
+        influx_thread1=threading.Thread(target=post_to_influx,args=(rate_filename[1],"he3-2_mca","daemon"),daemon=True)
         influx_thread1.start()
     
     exit_code=mca8000d()

@@ -22,7 +22,6 @@ import termios
 DIGIT_PER_SEC = 25000000.0
 SEC_PER_DIGIT = 1.0 / DIGIT_PER_SEC
 prescale=1
-VERBOSE=0
 
 maxMCAs=8
 CONFIG = "MCA_config.json"
@@ -38,7 +37,7 @@ termios.tcsetattr(fd, termios.TCSANOW, new)
 quit_flag = False
 stop_flag = False
 #verbose = False
-verbose = True
+#verbose = True
 
 def key_monitor():
     global quit_flag,stop_flag
@@ -93,7 +92,7 @@ def main_APG7300D_histgram():
     try:
         mcacommon=common.COMMON
         print("\n###### read configure file ######")
-        configs=mcacommon.readConfig(CONFIG)
+        configs=mcacommon.readConfig(config_filename)
         #status=mcacommon.initStatus()
         status=common.STATUS
         ID=0
@@ -102,12 +101,17 @@ def main_APG7300D_histgram():
             if configs[i].MCA_type == "APG73000D":
                 #print("APG73000D was found. (ID=",configs[i].ID,")")
                 ID=configs[i].ID
-        if VERBOSE:
+        if verbose:
             mcacommon.showConfig(configs[ID])
         serialnum = (configs[ID].SN).encode("utf-8")
         usbmca = apg7300d.APG7300D()     # Create an instance of class APG7300D and run its initialization
+        if verbose :
+            print("usbmca=",usbmca)        
         usbftdi = ftdi.FTDI()                                               # create an instance of class FTDI and run its initialization
         isSuccess, deviceList, deviceCounts = usbftdi.GetDeviceInfoList()   # Display information for all connected devices
+        if verbose:
+            print("deviceList=",deviceList)
+            print("SN=",configs[ID].SN.encode("utf-8"))
         isSuccess = usbftdi.OpenBySerialNumber((configs[ID].SN).encode("utf-8"))
         fileID=0
         #filename=tmpfile
