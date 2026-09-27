@@ -3,18 +3,12 @@
 
 python driver for AMPTEK MCA8000D, technoTP APG7300D，and KROMEK K102 DAQ
 original driver: https://github.com/HenningFo/mca8000d, https://github.com/rustam-lantern/LanternSpectrometer　
-## install
-### kromek
-
-$ sudo apt install libudev-dev
-$ cd MCAs kromek
-$ mkdir build
-$ cd build
-$ cmake ../
-$ make
 
 
 ## データ取得
+### $ runMCAs.py　　
+config File中のaactive が1のMCAについて、SN directoryにてrunMCA.pyを走らせる。
+
 ### $ runMCA.py　　
 最新のper* を作成してそこにデータを取得
 
@@ -32,3 +26,12 @@ defaultでは60秒ごとに1file作る。defaultではSN???_?.mcaというfile�
 　　ROOTFILE1　と　ROOTFILE2を比較できる
 
   
+## install
+### kromek
+
+$ sudo apt install libudev-dev
+$ cd MCAs kromek
+$ mkdir build
+$ cd build
+$ cmake ../
+$ make
