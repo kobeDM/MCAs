@@ -309,43 +309,43 @@ def createCfgString(cfg):
         cfgstring += k + "=" +cfg[k] +';'
     return(cfgstring)
 
-def readConfig(filename):
-    global SN,detector,threshold,detector,MCAchannel,dynamicrange,ROI,host,port,database
-    print("Reading config file ",filename)
-    ID=0
-    with open(filename) as f:
-        d = json.load(f)
-        host=d['INFLUXDB']['host']
-        port=d['INFLUXDB']['port']
-        database=d['INFLUXDB']['database']
-        for MCAid in d['MCA']:
-            active[ID]=d['MCA'][MCAid]['active']
-            print(" MCA ID:",MCAid,"(active:",active[ID],")")
-            if (active[ID]):
-                detector[ID]=d['MCA'][MCAid]['detector']
-                #SN[ID]=d['MCA'][MCAid]['SN']
-                threshold[ID]=d['MCA'][MCAid]['threshold']
-                MCAchannel[ID]=d['MCA'][MCAid]['MCAchannel']
-                dynamicrange[ID]=d['MCA'][MCAid]['dynamicrange']
-                ROI[ID][0][0]=d['MCA'][MCAid]['ROI0_min']
-                ROI[ID][0][1]=d['MCA'][MCAid]['ROI0_max']
-                ROI[ID][1][0]=d['MCA'][MCAid]['ROI1_min']
-                ROI[ID][1][1]=d['MCA'][MCAid]['ROI1_max']
-                ROI[ID][2][0]=d['MCA'][MCAid]['ROI2_min']
-                ROI[ID][2][1]=d['MCA'][MCAid]['ROI2_max']
-                ROI[ID][3][0]=d['MCA'][MCAid]['ROI3_min']
-                ROI[ID][3][1]=d['MCA'][MCAid]['ROI3_max']
-                ROI[ID][4][0]=d['MCA'][MCAid]['ROI4_min']
-                ROI[ID][4][1]=d['MCA'][MCAid]['ROI4_max']
-                print("  detector:",detector[ID],end="")
+#def readConfig(filename):
+#    global SN,detector,threshold,detector,MCAchannel,dynamicrange,ROI,host,port,database
+#    print("Reading config file ",filename)
+#    ID=0
+#    with open(filename) as f:
+#        d = json.load(f)
+#        host=d['INFLUXDB']['host']
+#        port=d['INFLUXDB']['port']
+#        database=d['INFLUXDB']['database']
+#        for MCAid in d['MCA']:
+#            active[ID]=d['MCA'][MCAid]['active']
+#            print(" MCA ID:",MCAid,"(active:",active[ID],")")
+#            if (active[ID]):
+#                detector[ID]=d['MCA'][MCAid]['detector']
+#                #SN[ID]=d['MCA'][MCAid]['SN']
+#                threshold[ID]=d['MCA'][MCAid]['threshold']
+#                MCAchannel[ID]=d['MCA'][MCAid]['MCAchannel']
+#                dynamicrange[ID]=d['MCA'][MCAid]['dynamicrange']
+#                ROI[ID][0][0]=d['MCA'][MCAid]['ROI0_min']
+#                ROI[ID][0][1]=d['MCA'][MCAid]['ROI0_max']
+#                ROI[ID][1][0]=d['MCA'][MCAid]['ROI1_min']
+#                ROI[ID][1][1]=d['MCA'][MCAid]['ROI1_max']
+#                ROI[ID][2][0]=d['MCA'][MCAid]['ROI2_min']
+#                ROI[ID][2][1]=d['MCA'][MCAid]['ROI2_max']
+#                ROI[ID][3][0]=d['MCA'][MCAid]['ROI3_min']
+#                ROI[ID][3][1]=d['MCA'][MCAid]['ROI3_max']
+#                ROI[ID][4][0]=d['MCA'][MCAid]['ROI4_min']
+#                ROI[ID][4][1]=d['MCA'][MCAid]['ROI4_max']
+#                print("  detector:",detector[ID],end="")
                 #print(", Serial Number:",SN[ID])
-                print("  threshold:", threshold[ID],end="")
-                print(", MCA channel:", MCAchannel[ID],end="")                
-                print(", dynamic range:",dynamicrange[ID])                 
-                print("  ROIs:",end="")
-                for ROIid in range(5):
-                    print("(",ROI[ID][ROIid][0],":",ROI[ID][ROIid][1],"), ",end="")
-            ID=ID+1
+#                print("  threshold:", threshold[ID],end="")
+#                print(", MCA channel:", MCAchannel[ID],end="")                
+#                print(", dynamic range:",dynamicrange[ID])                 
+#                print("  ROIs:",end="")
+#                for ROIid in range(5):
+#                    print("(",ROI[ID][ROIid][0],":",ROI[ID][ROIid][1],"), ",end="")
+#            ID=ID+1
     #for i in range (2):
     #    rate_filename[i]='SN'+str(SN[i])+'_rate.dat'    
     
@@ -733,9 +733,12 @@ def main_mca8000d():
         #print("device setup 0")
     dev.spectrum(True, True)
     dev.setPresetTime(presettime)
-    dev.setMCAchannel(MCAchannel[0]+1)
-    dev.setthreshold(threshold[0])
-    dev.setdynamicrange(dynamicrange[0])
+    #dev.setMCAchannel(MCAchannel[0]+1)
+    #dev.setthreshold(threshold[0])
+    #dev.setdynamicrange(dynamicrange[0])
+    dev.setMCAchannel(configs[ID].MCAchannel+1)
+    dev.setthreshold(configs[ID].threshold)
+    dev.setdynamicrange(configs[ID].dynamicrange)
 
 
     #if active[1]:
