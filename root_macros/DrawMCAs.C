@@ -12,7 +12,8 @@ void DrawMCAs( const std::string file_head,const int file_num){
   TCanvas *Resultscv = new TCanvas("summarycv","summarycv",800,600);
   Resultscv->SetGrid(1);
   const int MCACh = 8192;
-  const int showMax=3000;
+  //const int showMax=3000;
+  const int showMax=8192;
 	const int header = 12;
 	const int th_line=4;
 	const int live_line=7;

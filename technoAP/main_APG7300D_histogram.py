@@ -39,6 +39,8 @@ stop_flag = False
 #verbose = False
 #verbose = True
 
+data=8*[0]
+
 def key_monitor():
     global quit_flag,stop_flag
     while True:
@@ -93,10 +95,12 @@ def main_APG7300D_histgram():
         mcacommon=common.COMMON
         print("\n###### read configure file ######")
         configs=mcacommon.readConfig(config_filename)
+        print("length:",str(len(configs)))
         #status=mcacommon.initStatus()
         status=common.STATUS
         ID=0
         status.presettime =presettime
+        #for i in range(maxMCAs):
         for i in range(maxMCAs):
             if configs[i].MCA_type == "APG73000D":
                 #print("APG73000D was found. (ID=",configs[i].ID,")")
@@ -104,6 +108,11 @@ def main_APG7300D_histgram():
         if verbose:
             mcacommon.showConfig(configs[ID])
         serialnum = (configs[ID].SN).encode("utf-8")
+        rate_filename=configs[ID].SN+"_rate.dat"
+        if verbose:
+            print("rate filename:",rate_filename)
+        influx_thread=threading.Thread(target=mcacommon.post_to_influx,args=("daemon",rate_filename,configs[ID]),daemon=True)
+        influx_thread.start()
         usbmca = apg7300d.APG7300D()     # Create an instance of class APG7300D and run its initialization
         if verbose :
             print("usbmca=",usbmca)        
@@ -114,6 +123,7 @@ def main_APG7300D_histgram():
             print("SN=",configs[ID].SN.encode("utf-8"))
         isSuccess = usbftdi.OpenBySerialNumber((configs[ID].SN).encode("utf-8"))
         fileID=0
+        print("success.")
         #filename=tmpfile
         if isSuccess == True:
             isSuccess = usbmca.InitializeDevice(usbftdi)
@@ -138,7 +148,9 @@ def main_APG7300D_histgram():
                 #status=0
 
                 #mcacommon.saveSpectrum(thisfile, spec,status,starttime,presettime,elapsed_sec)  
-                mcacommon.saveSpectrum(thisfile, spec,configs[ID],status)  
+                mcacommon.saveSpectrum(thisfile, spec,configs[ID],status)
+                rate=mcacommon.ratecheck(spec,presettime,configs[ID])
+                mcacommon.saveRates(rate_filename, status.starttime,rate)
                 if(int(status.realtime)%prescale==0):
                     #print("\n##### elapsed_sec/acq_sec (sec): %.2f/%.2f #####" % (elapsed_sec, acq_sec))
                     print(" time:",str(int(status.realtime)),"/",str(presettime),end="\t")
@@ -275,6 +287,7 @@ if __name__ ==  '__main__':
     monitor_thread = threading.Thread(target=key_monitor)
     monitor_thread.daemon = True  
     monitor_thread.start()
+    
     exit_code=main_APG7300D_histgram()
     print("DAQ stopped.")
     termios.tcsetattr(fd, termios.TCSANOW, old)

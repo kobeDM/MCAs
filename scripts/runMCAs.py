@@ -93,9 +93,9 @@ def main():
     mcacommon=common.COMMON
     print("\n###### read configure file ######")
     configs=mcacommon.readConfig(config_filename)
+    print("length:",str(len(configs)))
     i=0
     activeMCAs=0
-
     for i in range(maxMCAs):
         if (configs[i].active):
             datadir=str(configs[i].SN)

@@ -1,5 +1,13 @@
 import os
 import json
+import subprocess
+import csv
+import time
+import datetime
+from datetime import timezone, timedelta
+JST = timezone(timedelta(hours=+9), 'JST')
+
+
 class CONFIG:
     def __init__(self):
         self.MCAchannel = 0
@@ -36,7 +44,7 @@ class COMMON():
         SN=[]
         active=[]
         ROI=[]
-        rate_filename=[]
+        #rate_filename=[]
         ID=[]
         MCA_type=[]
         for i in range (maxMCAs):
@@ -51,6 +59,9 @@ class COMMON():
             database=d['INFLUXDB']['database']
             for MCAid in d['MCA']:
                 configs[ID].active=d['MCA'][MCAid]['active']
+                configs[ID].host=host
+                configs[ID].port=port
+                configs[ID].database=database
                 if (configs[ID].active):
                     configs[ID].detector=d['MCA'][MCAid]['detector']
                     configs[ID].SN=d['MCA'][MCAid]['SN']
@@ -77,8 +88,10 @@ class COMMON():
                             print(", ",end="")
                     print("")
                 #for i in range (2):
-                #   rate_filename[i]='SN'+str(configs[ID].SN[i])+'_rate.dat' 
+                #   rate_filename[i]='SN'+str(configs[ID].SN[i])+'_rate.dat'
+                #print(ID,"OK")
                 ID=ID+1
+        #print(ID,"done")
         return(configs)
 
     def showConfig(config):
@@ -136,3 +149,63 @@ class COMMON():
             fh.write("FOOTTER\n")
         fh.write("<<MCA STATUS END>>\n")
         fh.close()
+
+    def post_to_influx(daemon,file,configs):
+        data=8*[0]
+        from influxdb import InfluxDBClient
+        #client = InfluxDBClient( host     = "10.37.0.214",port     = "8086",database= "miraclue" )
+        client = InfluxDBClient( host     = configs.host,port     = configs.port,database= configs.database )
+
+        print("posting to:",configs.database," in ",configs.host,":",configs.port)
+        print("detector:",configs.detector)
+        if(not os.path.isfile(file)):
+            cmd="touch "+file
+            subprocess.run(cmd, shell=True)
+        while(1):            
+            with open(file,'r') as f:
+                reader=csv.reader(f,delimiter='\t')
+                for data in reader:
+                    #print(data[0])
+                    json_data = [
+                        {
+                            'measurement' : configs.detector,
+                            'fields' : {
+                                'time_stamped'  : float(data[0]),
+                                'event_rate_live'  : float(data[1]),
+                                'rate_ROI1'  : float(data[2]),
+                                'rate_ROI2'  : float(data[3]),
+                                'rate_ROI3'  : float(data[4]),
+                                'rate_ROI4'  : float(data[5])
+                            },
+                            'time': datetime.datetime.fromtimestamp(float(data[0])/1.).astimezone(tz=JST).replace(tzinfo=JST).astimezone(tz=timezone.utc),
+                            'tags' : {
+                                'device' : configs.detector
+                            }
+                        }
+                    ]
+                    result=client.write_points(json_data)
+            time.sleep(1)
+
+    def ratecheck(spectrum,time,configs):
+        ch=0
+        rate=[0,0,0,0,0]
+        for chan in spectrum:
+            rate[0]+=chan
+            #if chan > 0 :
+            #print(str(ch)," ",str(chan))
+            for i in range (1,5):
+                if ch > configs.ROI[i][0] and  ch< configs.ROI[i][1]:
+                    rate[i]+=chan
+            ch+=1
+        for i in range (5):
+            rate[i] /= time
+        #return rate[0]
+        return rate
+    
+    def saveRates(filename,starttime, rate):
+        fh = open(filename, "a")
+        fh.write("{}\t".format(str(starttime)))
+        for i in range(5):
+            #print(str(rate[i]),end="\t")
+            fh.write("{}\t".format(str(rate[i])))
+        fh.write("\n")

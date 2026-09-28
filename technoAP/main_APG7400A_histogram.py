@@ -40,6 +40,7 @@ stop_flag = False
 #verbose = False
 verbose = True
 
+data=8*[0]
 def key_monitor():
     global quit_flag,stop_flag
     while True:
@@ -100,6 +101,12 @@ def main_APG7400A_histgram():
                 print("APG7400A was found. (ID=",configs[i].ID,")")
                 ID=configs[i].ID
         serialnum = (configs[ID].SN).encode("utf-8")
+        rate_filename=configs[ID].SN+"_rate.dat"
+        if verbose:
+            print("rate filename:",rate_filename)
+        influx_thread=threading.Thread(target=mcacommon.post_to_influx,args=("daemon",rate_filename,configs[ID]),daemon=True)
+        influx_thread.start()
+        
         usbmca = apg7400a.APG7400A()                # Create an instance of class APG7400A and run its initialization
         if verbose:
             print("usbmca=",usbmca)
@@ -145,7 +152,9 @@ def main_APG7400A_histgram():
                 #status=0
 
                 #mcacommon.saveSpectrum(thisfile, spec,status,starttime,presettime,elapsed_sec)  
-                mcacommon.saveSpectrum(thisfile, spec,configs[ID],status)  
+                mcacommon.saveSpectrum(thisfile, spec,configs[ID],status)                
+                rate=mcacommon.ratecheck(spec,presettime,configs[ID])
+                mcacommon.saveRates(rate_filename, status.starttime,rate)
                 if(int(status.realtime)%prescale==0):
                     #print("\n##### elapsed_sec/acq_sec (sec): %.2f/%.2f #####" % (elapsed_sec, acq_sec))
                     print(" time:",str(int(status.realtime)),"/",str(presettime),end="\t")
