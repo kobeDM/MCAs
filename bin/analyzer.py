@@ -24,7 +24,7 @@ with open("datafiles.txt", "w") as f:
 
 
 def run_mca2root():
-    cmd = ["root", "-l", "-q", "-b", "source/mca2root.cc"]
+    cmd = ["root", "-l", "-q", "-b", "../rootmacro/mca2root.cc"]
     subprocess.run(cmd)
 
 

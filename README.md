@@ -1,10 +1,14 @@
 # MCAAna
 
-## note
-### general
-- windowsで使う場合にはファイルのpermissionに注意。空ファイルの状態で読み取り専用のチェックマークを外しておき、スクリプトを走らせてから測定を開始する。
-- windowsでデータが保存されなくなるバグが起きた。MCAソフトウェア側の問題だと思われ、DppMCAの再起動で直った。
-- windowsでpythonスクリプトをバックグラウンドで走らせるにはpythonw3を使う。
-### liveViewer
-- liveViewerは毎ファイル二重に書き込まれる。ヒストグラムにFillする際に半分にしているが、原因がわからないのでスペクトルの確認程度の使用にとどめる。
-- 描画に使用したメモリの開放がうまくいっているか不明。ダメそうなら使わないこと。
+## bin
+- analyzer.py
+```
+$ analyzer.py [data directory path] [output directory path]
+```
+Make rootfile from mca data.
+
+- liveViewer.py
+Draw realtime spectrum.
+
+- mcaLogger.py
+Send live rate and real rate to InfluxDB. Config file is config/config.json.
