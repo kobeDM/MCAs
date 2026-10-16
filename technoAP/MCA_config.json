@@ -59,7 +59,7 @@
 	    "detector": "WC",
 	    "SN": "APG7300AA",
 	    "_comment for SN":"MCA8000D:[718,794]; APG7300[APG7300AA];K102:[2312687652]",
-	    "threshold": 0.1,
+	    "threshold": 10,
 	    "_comment for threshold": "MCA800D:percent to the dynamic range(0-100); APG7300: percent to the dynamic range(0.0-100.0)  K102: MCAchannel(0-4095)",
 	    "MCAchannel": 0,
 	    "_comment for MCAchannel": "MCA800D:[255,511,1023,2047,4095,8191];  APG7300[0(16384), 1(8192), 2(4096), 3(2048), 4(1024)];K102: fixed(4095)",

@@ -18,7 +18,7 @@ void DrawMCAs( const std::string file_head,const int file_num){
 	const int th_line=4;
 	const int live_line=7;
 	const int real_line=8;
-	const int rebin =16;
+	const int rebin =4;
 	string inputFile,outputFile;
 	TH1D* hist = new TH1D("hist","hist",MCACh,0,MCACh);
 	TH1D* hist_sum = new TH1D("hist_sum","hist_sum",MCACh,0,MCACh);
@@ -61,6 +61,7 @@ void DrawMCAs( const std::string file_head,const int file_num){
 	//hist->Draw();
 	//hist_sum->GetXaxis()->SetRangeUser(0,MCACh/2);
 	hist_sum->GetXaxis()->SetRangeUser(0,showMax);
+	
 	hist_sum->Sumw2();
 	hist_sum->Scale(1./live_sum);
 	cerr<<"total "<< live_sum<<"sec"<<endl;
@@ -70,8 +71,48 @@ void DrawMCAs( const std::string file_head,const int file_num){
 	hist_sum->GetYaxis()->SetTitle( "count/bin/sec" );
 
 	hist_sum->Draw();
+	//hist_sum->GetYaxis()->SetRangeUser(0,0.10);
+
+
+
+	TF1 *gaus = new TF1("gaus","gaus",1250,1350);
+
+	gaus->SetParameters(hist_sum->GetMaximum(),220,20);
+
+	hist_sum->Fit(gaus,"R");
+
+	gaus->SetLineColor(kRed);
+	gaus->SetLineWidth(2);
+	gaus->Draw("same");
+
+	double mean  = gaus->GetParameter(1);
+	double sigma = gaus->GetParameter(2);
+
+	double fwhm = 2.355*sigma;
+	double res  = 100.0*fwhm/mean;
+
+	TPaveText *pt = new TPaveText(0.60,0.65,0.88,0.88,"NDC");
+
+	pt->SetFillColor(0);
+	pt->SetBorderSize(1);
+	pt->SetTextSize(0.03);
+
+	pt->AddText(Form("Mean = %.2f",mean));
+	pt->AddText(Form("Sigma = %.2f",sigma));
+	pt->AddText(Form("FWHM = %.2f",fwhm));
+	pt->AddText(Form("Resolution = %.2f %%",res));
+	double meanErr  = gaus->GetParError(1);
+	double sigmaErr = gaus->GetParError(2);
+
+	pt->AddText(Form("Mean = %.2f #pm %.2f",mean,meanErr));
+	pt->AddText(Form("Sigma = %.2f #pm %.2f",sigma,sigmaErr));
+
+	pt->Draw();
+
+
+
 	
 	hist_sum->SaveAs( outputFile.c_str( ) );
-
+	Resultscv->SaveAs("hist.png");
 	//	return 0;
 }

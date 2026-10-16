@@ -27,7 +27,7 @@
 	    "ROI4_max": 8191
 	},
 	"MCA1": {
-	    "active": 1,
+	    "active": 0,
 	    "MCA_type": "MCA8000D",
 	    "_comment for MCA_type":"[MCA8000D, K102]",
 	    "detector": "he3-2_mca",	    
@@ -59,7 +59,7 @@
 	    "detector": "NaI",
 	    "SN": "APG7300AA",
 	    "_comment for SN":"MCA8000D:[718,794]; [APG7300AA],[APG7400AA];K102:[2312687652]",
-	    "threshold": 2,
+	    "threshold": 0.3,
 	    "_comment for threshold": "MCA800D:percent to the dynamic range(0-100); APG7300: percent to the dynamic range(0.0-100.0)  K102: MCAchannel(0-4095)",
 	    "MCAchannel": 1,
 	    "_comment for MCAchannel": "MCA800D:[255,511,1023,2047,4095,8191];  APG7300[0(16384), 1(8192), 2(4096), 3(2048), 4(1024)];K102: fixed(4095)",
@@ -79,7 +79,7 @@
 	    "ROI4_max": 8191
 	},	
 	"MCA3": {
-	    "active": 1,
+	    "active": 0,
 	    "MCA_type": "APG7400A",
 	    "_comment for MCA_type":"[MCA8000D,APG7300D,APG7400A,K102]",
 	    "detector": "NaI-2",
@@ -132,8 +132,8 @@
 	}
     },
     "INFLUXDB":{
-	"host":"10.37.0.214",
+	"host":"10.37.0.216",
 	"port":"8086",
-	"database":"miraclue" 
+	"database":"cn1" 
     }
 }

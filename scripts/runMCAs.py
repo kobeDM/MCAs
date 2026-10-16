@@ -66,7 +66,8 @@ def copy_configfile(config_filename):
 
 def make_configfile(config_filename,IDtorun):
     # copy config file        
-    if (not os.path.exists(config_filename)):
+    #if (not os.path.exists(config_filename)):
+    if (1) :
         print(config_filename+" does not exist.")
         print("MCAid to run:",IDtorun)
         ID=0
